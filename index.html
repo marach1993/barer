@@ -1,0 +1,1000 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}[hidden]{display:none!important}</style>
+</head>
+<body>
+<title>Բառեր</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=Noto+Sans+Armenian:wght@400;600&family=Noto+Serif+Armenian:wght@500;700&display=swap">
+<style>
+/* Layout: one narrow column; sticky stats header, practice card centered, fixed bottom tab bar. Palette: Yerevan tuff rose-grey + pomegranate. */
+:root{
+  --bg:#F1ECEE; --surface:#FFFFFF; --surface-2:#E9E1E5; --ink:#251A20; --muted:#7B6B74; --line:#DDD3D8;
+  --accent:#A3224A; --accent-ink:#FFFFFF; --apricot:#D27B25; --ok:#257552; --ok-bg:#E2F1E8; --bad:#B9352A; --bad-bg:#FAE5E2;
+  --f-ui:"Golos Text","Noto Sans Armenian",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-hy:"Noto Serif Armenian","Noto Sans Armenian",Georgia,serif;
+  --f-hys:"Noto Sans Armenian","Golos Text",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#16111A; --surface:#211A25; --surface-2:#2C2431; --ink:#F2EAF0; --muted:#A797A2; --line:#3A3040;
+  --accent:#EE5C83; --accent-ink:#1B0F15; --apricot:#F0A35A; --ok:#5BC394; --ok-bg:#183126; --bad:#F27D6F; --bad-bg:#3B1E1D; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#16111A; --surface:#211A25; --surface-2:#2C2431; --ink:#F2EAF0; --muted:#A797A2; --line:#3A3040;
+  --accent:#EE5C83; --accent-ink:#1B0F15; --apricot:#F0A35A; --ok:#5BC394; --ok-bg:#183126; --bad:#F27D6F; --bad-bg:#3B1E1D; color-scheme:dark}
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-ui);font-size:15px;-webkit-tap-highlight-color:transparent}
+*{box-sizing:border-box}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.app{max-width:560px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:10px calc(84px + env(safe-area-inset-bottom,0px))}
+header.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:6px 12px}
+.brand{display:flex;align-items:baseline;gap:8px;min-width:0}
+.brand b{font-family:var(--f-hy);font-size:26px;font-weight:700;color:var(--accent);letter-spacing:.01em}
+.brand span{color:var(--muted);font-size:13px;white-space:nowrap}
+.stats{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.chip{font-size:12px;padding:4px 9px;border-radius:999px;background:var(--surface-2);color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.chip strong{color:var(--ink);font-weight:600}
+.view[hidden]{display:none!important}
+.controls{display:grid;gap:8px;margin-bottom:12px}
+.seg{display:flex;background:var(--surface-2);border-radius:12px;padding:3px;gap:3px}
+.seg button{flex:1;border:0;background:transparent;padding:8px 6px;border-radius:9px;font-size:13.5px;font-weight:500;color:var(--muted);min-width:0;white-space:nowrap}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.row{display:flex;gap:8px;align-items:center}
+select,.input{width:100%;background:var(--surface);border:1.5px solid var(--line);border-radius:12px;padding:10px 12px;font-size:15px}
+select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 18px) 55%,calc(100% - 13px) 55%;background-size:5px 5px;background-repeat:no-repeat;padding-right:32px}
+.card{background:var(--surface);border-radius:20px;padding:16px 16px 18px;border:1px solid var(--line)}
+.card-top{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:12.5px;color:var(--muted)}
+.dirlabel{text-transform:uppercase;letter-spacing:.08em;font-weight:600}
+.count{font-variant-numeric:tabular-nums}
+.count b{color:var(--ink)}
+.bar{height:4px;border-radius:4px;background:var(--surface-2);margin-top:8px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--apricot);border-radius:4px;transition:width .3s}
+.prompt{min-height:118px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:18px 4px 10px;gap:6px}
+.prompt .w{font-size:clamp(28px,8.5vw,40px);line-height:1.2;text-wrap:balance;overflow-wrap:anywhere}
+.prompt .w.hy{font-family:var(--f-hy);font-weight:500}
+.prompt .w.ru{font-weight:600}
+.translit{color:var(--muted);font-size:14px;letter-spacing:.02em}
+.cat{font-size:11.5px;color:var(--muted);background:var(--surface-2);padding:2px 8px;border-radius:999px}
+form.answer{display:flex;gap:8px;margin-top:6px}
+form.answer .input{flex:1;min-width:0;font-size:18px;padding:12px 14px}
+.input.hy{font-family:var(--f-hys)}
+.btn{border:0;border-radius:12px;padding:12px 16px;font-weight:600;font-size:15px;background:var(--accent);color:var(--accent-ink);white-space:nowrap}
+.btn.ghost{background:var(--surface-2);color:var(--ink)}
+.btn.small{padding:8px 12px;font-size:13.5px}
+.btn:disabled{opacity:.5}
+.subactions{display:flex;justify-content:space-between;align-items:center;margin-top:10px;gap:8px}
+.link{background:none;border:0;color:var(--muted);font-size:13.5px;padding:6px 2px;text-decoration:underline;text-underline-offset:3px}
+.fb{margin-top:12px;border-radius:14px;padding:12px 14px;font-size:15px;display:grid;gap:4px}
+.fb.ok{background:var(--ok-bg);color:var(--ok)}
+.fb.bad{background:var(--bad-bg);color:var(--bad)}
+.fb .yours{text-decoration:line-through;opacity:.8;overflow-wrap:anywhere}
+.fb .right{color:var(--ink);font-size:20px;font-weight:600;overflow-wrap:anywhere}
+.fb .right.hy{font-family:var(--f-hy);font-weight:500}
+.shake{animation:shake .3s}
+@keyframes shake{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.pop{animation:pop .35s}
+@keyframes pop{50%{transform:scale(1.02)}}
+@media (prefers-reduced-motion:reduce){.shake,.pop{animation:none}.bar i{transition:none}}
+.kbd{margin-top:12px;display:grid;gap:6px;user-select:none;-webkit-user-select:none}
+.kbd .kr{display:flex;gap:4px;justify-content:center}
+.kbd button{flex:1 1 0;min-width:0;max-width:46px;height:44px;border:0;border-radius:8px;background:var(--surface);border-bottom:2px solid var(--line);font-family:var(--f-hys);font-size:18px;padding:0;touch-action:manipulation}
+.kbd button:active{background:var(--surface-2)}
+.kbd button.wide{max-width:none;flex:2 1 0;font-family:var(--f-ui);font-size:14px}
+.kbd button.space{flex:5 1 0;max-width:none}
+.kbd button.go{background:var(--accent);color:var(--accent-ink);border-bottom-color:transparent}
+.empty{text-align:center;padding:36px 16px;color:var(--muted);line-height:1.5}
+.empty b{display:block;color:var(--ink);font-size:18px;margin-bottom:6px;font-family:var(--f-hy)}
+/* words list */
+.list{display:grid;gap:1px;background:var(--line);border-radius:16px;overflow:hidden;border:1px solid var(--line);margin-top:10px}
+.item{background:var(--surface);padding:11px 14px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;align-items:center;cursor:pointer}
+.item .h{font-family:var(--f-hy);font-size:17px;overflow-wrap:anywhere}
+.item .r{color:var(--muted);font-size:13.5px;overflow-wrap:anywhere;grid-column:1}
+.item .m{grid-row:1/3;grid-column:2;display:grid;gap:5px;font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums;width:92px}
+.mini{display:grid;grid-template-columns:auto 1fr;gap:6px;align-items:center}
+.mini .bar{margin:0;height:3px}
+.item.done .h::after{content:" ✓";color:var(--ok);font-family:var(--f-ui);font-size:14px}
+.item .acts{grid-column:1/-1;display:flex;gap:8px;flex-wrap:wrap;padding-top:6px}
+.listhead{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:13px;margin-top:10px}
+/* forms */
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:16px;display:grid;gap:12px;margin-bottom:12px}
+.panel h2{margin:0;font-size:16px}
+.panel p{margin:0;color:var(--muted);font-size:13.5px;line-height:1.45}
+label.f{display:grid;gap:6px;font-size:13px;color:var(--muted);font-weight:500}
+.sw{display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:14.5px}
+.sw input{width:20px;height:20px;accent-color:var(--accent)}
+textarea.input{min-height:90px;font-size:12px;font-family:ui-monospace,Menlo,monospace}
+nav.tabs{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);display:flex;justify-content:center;padding-bottom:env(safe-area-inset-bottom,0px);padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px);z-index:5}
+nav.tabs .in{display:flex;width:100%;max-width:560px}
+nav.tabs button{flex:1;border:0;background:none;padding:9px 4px 10px;display:grid;justify-items:center;gap:3px;font-size:11.5px;color:var(--muted)}
+nav.tabs button svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+nav.tabs button[aria-current="page"]{color:var(--accent);font-weight:600}
+.toast{position:fixed;left:50%;bottom:calc(80px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;font-size:14px;z-index:9;max-width:calc(100% - 32px)}
+.note{font-size:12.5px;color:var(--muted);line-height:1.45}
+</style>
+
+<div class="app">
+  <header class="top">
+    <div class="brand"><b>Բառեր</b><span>армянский</span></div>
+    <div class="stats"><span class="chip">выучено <strong id="stLearned">0</strong>/<span id="stTotal">0</span></span><span class="chip">сегодня <strong id="stToday">0</strong></span></div>
+  </header>
+
+  <!-- PRACTICE -->
+  <section class="view" id="v-learn">
+    <div class="controls">
+      <div class="seg" id="modeSeg" role="group" aria-label="Режим">
+        <button data-v="new">Новые</button><button data-v="all">Все слова</button><button data-v="err">Ошибки</button>
+      </div>
+      <div class="row">
+        <div class="seg" id="dirSeg" role="group" aria-label="Направление" style="flex:1">
+          <button data-v="both">Оба</button><button data-v="a">Հայ → Рус</button><button data-v="b">Рус → Հայ</button>
+        </div>
+      </div>
+      <select id="catSel" aria-label="Тема"></select>
+    </div>
+
+    <div class="card" id="card">
+      <div class="card-top"><span class="dirlabel" id="dirLabel">С армянского</span><span class="count" id="cntLabel"></span></div>
+      <div class="bar"><i id="cntBar" style="width:0"></i></div>
+      <div class="prompt"><div class="w hy" id="prompt">…</div><div class="translit" id="translit"></div><span class="cat" id="catTag"></span></div>
+      <form class="answer" id="ansForm" autocomplete="off">
+        <input class="input" id="ans" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="done" placeholder="Перевод">
+        <button class="btn" id="checkBtn" type="submit">Проверить</button>
+      </form>
+      <div id="fb"></div>
+      <div class="subactions">
+        <button class="link" type="button" id="dunno">Не знаю</button>
+        <button class="link" type="button" id="kbdToggle">Армянская клавиатура</button>
+      </div>
+    </div>
+    <div class="kbd" id="kbd" hidden></div>
+    <div class="empty" id="emptyLearn" hidden></div>
+  </section>
+
+  <!-- WORDS -->
+  <section class="view" id="v-words" hidden>
+    <div class="controls">
+      <input class="input" id="search" placeholder="Поиск по-армянски или по-русски">
+      <select id="catSel2" aria-label="Тема"></select>
+    </div>
+    <div class="listhead"><span id="listCount"></span><span>Հ→Р · Р→Հ</span></div>
+    <div class="list" id="list"></div>
+  </section>
+
+  <!-- ADD -->
+  <section class="view" id="v-add" hidden>
+    <form class="panel" id="addForm" autocomplete="off">
+      <h2>Новое слово</h2>
+      <label class="f">По-армянски <input class="input hy" id="addHy" required placeholder="например: խնձոր" autocomplete="off" spellcheck="false"></label>
+      <div class="kbd" id="kbd2" hidden></div>
+      <button class="link" type="button" id="kbd2Toggle" style="justify-self:start">Армянская клавиатура</button>
+      <label class="f">По-русски <input class="input" id="addRu" required placeholder="яблоко" autocomplete="off"></label>
+      <p>Несколько вариантов перевода пишите через точку с запятой: «берег; ладонь».</p>
+      <label class="f">Тема <select id="addCat"></select></label>
+      <button class="btn" type="submit">Добавить</button>
+    </form>
+    <div class="panel">
+      <h2>Много слов сразу</h2>
+      <p>Сфотографируйте страницу тетради и отправьте в чат с Claude. Перевод будет проверен, дубликаты убраны, и слова попадут в общую базу приложения вместе с вашим прогрессом.</p>
+    </div>
+  </section>
+
+  <!-- SETTINGS -->
+  <section class="view" id="v-set" hidden>
+    <div class="panel">
+      <h2>Обучение</h2>
+      <label class="f">Сколько правильных ответов нужно в каждую сторону <input class="input" id="sGoal" type="number" min="1" max="500" inputmode="numeric"></label>
+      <label class="f">Через сколько других слов можно повторить слово <input class="input" id="sGap" type="number" min="0" max="200" inputmode="numeric"></label>
+      <div class="sw"><span>Подсказка-транслит под армянским словом</span><input type="checkbox" id="sTranslit"></div>
+      <div class="sw"><span>После ошибки переписать правильный ответ</span><input type="checkbox" id="sRetype"></div>
+      <div class="sw"><span>Армянская клавиатура на экране по умолчанию</span><input type="checkbox" id="sKbd"></div>
+    </div>
+    <div class="panel">
+      <h2>Резервная копия</h2>
+      <p>В Telegram прогресс сохраняется в облаке Telegram. Здесь можно перенести его вручную на другое устройство.</p>
+      <textarea class="input" id="backup" placeholder="Нажмите «Скопировать» или вставьте сюда копию и нажмите «Загрузить»"></textarea>
+      <div class="row"><button class="btn ghost small" id="bkExport" type="button">Скопировать</button><button class="btn ghost small" id="bkImport" type="button">Загрузить</button></div>
+    </div>
+    <div class="panel">
+      <h2>Сброс</h2>
+      <button class="btn ghost small" id="resetBtn" type="button" style="justify-self:start">Сбросить весь прогресс</button>
+      <div id="resetConfirm" hidden class="row"><span class="note">Точно? Счётчики всех слов обнулятся.</span><button class="btn small" id="resetYes" type="button">Да, сбросить</button></div>
+    </div>
+    <p class="note" id="verNote"></p>
+  </section>
+</div>
+
+<nav class="tabs"><div class="in">
+  <button data-tab="learn" aria-current="page"><svg viewBox="0 0 24 24"><path d="M4 5h11a3 3 0 0 1 3 3v11H7a3 3 0 0 1-3-3z"/><path d="M8 10h6M8 14h4"/></svg>Учить</button>
+  <button data-tab="words"><svg viewBox="0 0 24 24"><path d="M5 6h14M5 12h14M5 18h9"/></svg>Слова</button>
+  <button data-tab="add"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 8v8M8 12h8"/></svg>Добавить</button>
+  <button data-tab="set"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg>Настройки</button>
+</div></nav>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+const BASE_VERSION = "2026-10-29";
+const RAW = `ավանակ|осёл|ani
+թիթեռ|бабочка|ani
+թև|крыло|body
+ժամ|час|time
+ժայռ|скала|nat
+գանգ|череп|body
+որսորդ|охотник|ppl
+օրոր|колыбельная|misc
+հոնք|бровь|body
+սարք|устройство|misc
+տարիք|возраст|time
+սպասք|посуда|place
+վազք|бег|misc
+վազել|бегать|verb
+հոն|кизил|food
+սար|гора|nat
+տարի|год|time
+սպաս|спас (суп из мацони)|food
+վազ|виноградная лоза|food
+պապ;պապիկ|дедушка|ppl
+պանիր|сыр|food
+դարպաս|ворота|place
+պարան|верёвка|misc
+տառ|буква|abc
+մեծատառ|заглавная буква;прописная буква|abc
+փոքրատառ|строчная буква;маленькая буква|abc
+տպատառ|печатная буква|abc
+տպել|печатать|verb
+արջ|медведь|ani
+փիղ|слон|ani
+գայլ|волк|ani
+աղվես|лиса|ani
+առյուծ|лев|ani
+վագր|тигр|ani
+բալ|вишня|food
+փոքրիկ|маленький (ласк.)|adj
+շորեր|одежда|misc
+օր օրի|с каждым днём;день ото дня|phr
+նեղ|узкий|adj
+հաստլիկ|толстенький|adj
+մարմին|тело|body
+հովիկ|ветерок|nat
+քամի|ветер|nat
+կարմիր|красный|adj
+սպիտակ|белый|adj
+այտ|щека|body
+կլորիկ|кругленький|adj
+համով|вкусный|adj
+գնել|купить;покупать|verb
+քնել|спать|verb
+գերել|очаровывать;пленить|verb
+քերել|тереть;скоблить|verb
+քայլ|шаг|misc
+մրջյուն|муравей|ani
+ջայլամ|страус|ani
+ջահ|факел|misc
+ջութակ|скрипка|misc
+ջրարջ|енот|ani
+ջրահարս|русалка|misc
+աստղ|звезда|nat
+ես չեմ|я не (есть)|gram
+դու չես|ты не (есть)|gram
+նա չի|он не (есть);она не (есть)|gram
+մենք չենք|мы не (есть)|gram
+դուք չեք|вы не (есть)|gram
+նրանք չեն|они не (есть)|gram
+ես էի|я был;я была|gram
+դու էիր|ты был;ты была|gram
+նա էր|он был;она была|gram
+մենք էինք|мы были|gram
+դուք էիք|вы были|gram
+նրանք էին|они были|gram
+ես չէի|я не был;я не была|gram
+դու չէիր|ты не был;ты не была|gram
+նա չէր|он не был;она не была|gram
+մենք չէինք|мы не были|gram
+դուք չէիք|вы не были|gram
+նրանք չէին|они не были|gram
+վարդ|роза|food
+վարազ|кабан|ani
+վրձին|кисть (для рисования)|misc
+վիճակ|состояние|misc
+վատ|плохо;плохой|adj
+վարտիք|брюки;штаны|misc
+տետր|тетрадь|abc
+տերև|лист (дерева)|food
+տաք|горячий;тёплый|adj
+տանձ|груша|food
+տուն|дом|place
+տատրակ|горлица;дикий голубь|ani
+րոպե|минута|time
+Րաֆֆի|Раффи (писатель)|abc
+վայրկյան|секунда|time
+ցան|сыпь|body
+ցուրտ|холод|nat
+ցորեն|пшеница|food
+ցամաք|суша|nat
+ցող|роса|nat
+ցատկել|прыгать|verb
+թռչել|летать;лететь|verb
+ուրախ|весёлый;весело|adj
+ուսուցիչ|учитель|ppl
+ուղեղ|мозг|body
+ուսանող|студент|ppl
+ուխտ|клятва;обет|misc
+ուղտ|верблюд|ani
+ախտ|болезнь|misc
+աղտ|грязь|misc
+բութ մատ;բթամատ|большой палец|body
+ցուցամատ|указательный палец|body
+ցույց տալ|показывать|verb
+միջնամատ|средний палец|body
+մատնեմատ|безымянный палец|body
+ճկույթ|мизинец|body
+ընկնել|упасть;падать|verb
+ոզնի|ёж|ani
+գեղեցիկ|красивый|adj
+ափսե|тарелка|place
+կատու|кошка;кот|ani
+փոշի|пыль|misc
+գերի|пленник|ppl
+ոսկի|золото|misc
+մրգեր|фрукты|food
+կացին|топор|misc
+ձայն|голос|body
+տեր|хозяин|ppl
+հրաման|приказ|misc
+փողոց|улица|place
+փունջ|букет;пучок|misc
+փետուր|перо|ani
+փոստ|почта|place
+քաղաք|город|place
+քար|камень|nat
+քննություն|экзамен|abc
+քույր|сестра|ppl
+քացախ|уксус|food
+Եվա|Ева|abc
+Եվրոպա|Европа|abc
+Եվրասիա|Евразия|abc
+օդ|воздух|nat
+օղ|кольцо;обруч;серьга|misc
+օղի|водка|food
+օրորոց|колыбель;люлька|place
+օդերևութաբան|синоптик|ppl
+օգնություն|помощь|misc
+օգնել|помогать|verb
+ֆուտբոլ|футбол|misc
+Ֆրիկ|Фрик (поэт)|abc
+ֆոն|фон|misc
+ֆիզիկական|физический|adj
+այսօր|сегодня|time
+ես ունեմ|я имею|gram
+դու ունես|ты имеешь|gram
+նա ունի|он имеет;она имеет|gram
+մենք ունենք|мы имеем|gram
+դուք ունեք|вы имеете|gram
+նրանք ունեն|они имеют|gram
+ես չունեմ|я не имею|gram
+դու չունես|ты не имеешь|gram
+նա չունի|он не имеет;она не имеет|gram
+մենք չունենք|мы не имеем|gram
+դուք չունեք|вы не имеете|gram
+նրանք չունեն|они не имеют|gram
+արժենալ|стоить (о цене)|verb
+ես արժեմ|я стою (о цене)|gram
+դու արժես|ты стоишь (о цене)|gram
+նա արժե;նա արժի|он стоит (о цене);она стоит (о цене)|gram
+մենք արժենք|мы стоим (о цене)|gram
+դուք արժեք|вы стоите (о цене)|gram
+նրանք արժեն|они стоят (о цене)|gram
+ես չարժեմ|я не стою (о цене)|gram
+դու չարժես|ты не стоишь (о цене)|gram
+նա չարժե;նա չարժի|он не стоит (о цене);она не стоит (о цене)|gram
+մենք չարժենք|мы не стоим (о цене)|gram
+դուք չարժեք|вы не стоите (о цене)|gram
+նրանք չարժեն|они не стоят (о цене)|gram
+ես ունեի|я имел;я имела|gram
+դու ունեիր|ты имел;ты имела|gram
+նա ուներ|он имел;она имела|gram
+մենք ունեինք|мы имели|gram
+դուք ունեիք|вы имели|gram
+նրանք ունեին|они имели|gram
+ես չունեի|я не имел;я не имела|gram
+դու չունեիր|ты не имел;ты не имела|gram
+նա չուներ|он не имел;она не имела|gram
+մենք չունեինք|мы не имели|gram
+դուք չունեիք|вы не имели|gram
+նրանք չունեին|они не имели|gram
+ես արժեի|я стоил (о цене);я стоила (о цене)|gram
+դու արժեիր|ты стоил (о цене);ты стоила (о цене)|gram
+նա արժեր|он стоил (о цене);она стоила (о цене)|gram
+մենք արժեինք|мы стоили (о цене)|gram
+դուք արժեիք|вы стоили (о цене)|gram
+նրանք արժեին|они стоили (о цене)|gram
+ես չարժեի|я не стоил (о цене);я не стоила (о цене)|gram
+դու չարժեիր|ты не стоил (о цене);ты не стоила (о цене)|gram
+նա չարժեր|он не стоил (о цене);она не стоила (о цене)|gram
+մենք չարժեինք|мы не стоили (о цене)|gram
+դուք չարժեիք|вы не стоили (о цене)|gram
+նրանք չարժեին|они не стоили (о цене)|gram
+ես կայի|я был (находился);я была (находилась)|gram
+դու կայիր|ты был (находился);ты была (находилась)|gram
+նա կար|он был (находился);она была (находилась)|gram
+մենք կայինք|мы были (находились)|gram
+դուք կայիք|вы были (находились)|gram
+նրանք կային|они были (находились)|gram
+ես չկայի|я не был (не находился);я не была (не находилась)|gram
+դու չկայիր|ты не был (не находился);ты не была (не находилась)|gram
+նա չկար|он не был (не находился);она не была (не находилась)|gram
+մենք չկայինք|мы не были (не находились)|gram
+դուք չկայիք|вы не были (не находились)|gram
+նրանք չկային|они не были (не находились)|gram
+դաս|урок|abc
+քայլել|шагать;идти пешком|verb
+գնալ ոտքով|идти пешком|verb
+հետիոտն|пешеход|ppl
+անձրև|дождь|nat
+մի՛ մաղիր|не мороси|phr
+խաղող|виноград|food
+դատարկ|пустой|adj
+բեռ|груз|misc
+տատ;տատիկ|бабушка|ppl
+թոռ;թոռնիկ|внук;внучек|ppl
+աշխատասեր|трудолюбивый|adj
+ասել|сказать;говорить|verb
+քիթ|нос|body
+ձմեռ|зима|nat
+ձյուն|снег|nat
+ծիտ|воробей;птичка|ani
+ընծա|подарок|misc
+թուփ|куст|food
+թաթ|лапа|ani
+թան|тан (напиток из мацони)|food
+ժիր|шустрый;бодрый;расторопный|adj
+իշխան|князь;севанская форель|ppl
+իգական|женский|adj
+իրականություն|реальность|misc
+արական|мужской|adj
+խաղ|игра|misc
+խաչ|крест|misc
+խարույկ|костёр|nat
+խոզ|свинья|ani
+խիստ|строгий|adj
+խաղաղ|тихий;мирный|adj
+ծիածան|радуга|nat
+ծիծեռնակ|ласточка|ani
+ծով|море|nat
+ծերուկ|старик|ppl
+կեռ|крюк|misc
+կոկոն|бутон|food
+կարապ|лебедь|ani
+կեռաս|черешня|food
+կրակ|огонь|nat
+կապիկ|обезьяна|ani
+կին|женщина;жена|ppl
+փոքր|маленький|adj
+մեծ|большой|adj
+նուռ|гранат|food
+սալոր|слива|food
+թութ|шелковица|food
+թուզ|инжир|food
+նուշ|миндаль|food
+կեռասենի|черешневое дерево|food
+թթենի|тутовое дерево|food
+թանձր|густой|adj
+թիվ|цифра;число|abc
+լուր|новость|misc
+նռնենի|гранатовое дерево|food
+ծիրան|абрикос|food
+ճայ|чайка|ani
+Ճայը ծովի վրա է|Чайка над морем|phr
+ժլատ|скупой;жадный|adj
+ժպիտ|улыбка|body
+ժամանակ|время|time
+իլիկ|веретено|misc
+իրեր|вещи|misc
+իր|вещь|misc
+ինքնաթիռ|самолёт|misc
+իրական|настоящий;реальный;реально|adj
+վրա|на;над|misc
+տակ|под|misc
+շուրջը|вокруг;около|misc
+կողքին|рядом|misc
+կիրակի|воскресенье|time
+պատրաստել|готовить|verb
+կարդալ|читать|verb
+տնակ|домик|place
+ճաշ|обед|food
+գույն|цвет|adj
+գույնզգույն|разноцветный|adj
+դեղին|жёлтый|adj
+կապույտ|синий|adj
+մոտենալ|подходить;приближаться|verb
+ծաղիկ|цветок|food
+ծաղկել|цвести|verb
+անել|делать|verb
+Այդ ի՞նչ ես անում|Что это ты делаешь?|phr
+երգել|петь|verb
+ամբողջ|целый;весь|adj
+ծափ զարկել;ծափահարել|хлопать в ладоши|verb
+բայց|но|misc
+չպոկես|не срывай|phr
+ճչալ|кричать|verb
+Մտե՛ք, հաջորդը|Заходите, следующий!|phr
+սունկ|гриб|food
+սիրտ|сердце|body
+ուժեղ|сильный|adj
+թույլ|слабый|adj
+ազնիվ|честный|adj
+պատեհ|удобный;уместный|adj
+ափ|берег;ладонь|nat
+պահ|миг;момент|time
+սեպ|клин|misc
+տապ|зной;жара|nat
+հատ|штука|misc
+ասպետ|рыцарь|ppl
+պատ|стена|place
+փեսա|жених;зять|ppl
+երջանիկ|счастливый|adj
+տիկնիկ|кукла|misc
+երազանք|мечта|misc
+մտածել|думать|verb
+զբոսնել|гулять|verb
+հորինել|выдумывать;придумывать|verb
+պտտվել|крутиться;вращаться|verb
+ամպ|облако|nat
+արև|солнце|nat
+բերդ|крепость|place
+բամբակ|вата|misc
+գիր|письмо;писание;письменность|abc
+ելակ|клубника|food
+երազ|сон;мечта|misc
+զանգ|звонок|misc
+զարդ|украшение|misc
+էշ|осёл|ani
+դդում|тыква|food
+դար|век|time
+էկրան|экран|misc
+ընկեր|друг;товарищ|ppl
+ընտանիք|семья|ppl
+խաղալ|играть|verb
+խաղում եմ|я играю|gram
+երգում եմ|я пою|gram
+տալ|давать|verb
+տալիս եմ|я даю|gram
+գալ|приходить;идти;ходить|verb
+գալիս եմ|я иду;я прихожу|gram
+լալ|плакать|verb
+լալիս եմ|я плачу|gram
+սիսեռ|горох;нут|food
+ուռենի|ива;верба|food
+բառարան|словарь|abc
+բերան|рот|body
+անցյալ ժամանակ|прошедшее время|abc
+նկարել|рисовать|verb
+ուտել|есть (кушать);кушать|verb
+պարել|танцевать|verb
+ես եմ|я (есть)|gram
+դու ես|ты (есть)|gram
+նա է|он (есть);она (есть)|gram
+մենք ենք|мы (есть)|gram
+դուք եք|вы (есть)|gram
+նրանք են|они (есть)|gram
+լուսին|луна|nat
+լամպ|лампа|place
+լու|блоха|ani
+լոբի|фасоль|food
+լոր|перепел;перепёлка|ani
+էլեկտրոն|электрон|misc
+անիվ;ակ|колесо|misc
+վրան|палатка|misc
+նավ|корабль|misc
+նստել|сидеть;садиться|verb
+ընկույզ|орех|food
+ընտիր|отборный|adj
+աշակերտ|ученик|ppl
+ազատ|свободный|adj
+աշուն|осень|nat
+անտառ|лес|nat
+բարի|добрый|adj
+բարև|привет|phr
+բարեկամ|родственник;друг|ppl
+գիշեր|ночь|time
+գետ|река|nat
+գինի|вино|food
+դուռ|дверь|place
+դուր գալ|нравиться|verb
+դաշտ|поле|nat
+Երևան|Ереван|abc
+երամ;երամակ|стая;стадо|ani
+զինվոր|солдат;военный|ppl`;
+const CATS = {food:"Растения и еда",ani:"Животные",nat:"Природа и погода",ppl:"Люди и семья",body:"Тело",adj:"Признаки и цвета",verb:"Глаголы",place:"Дом и город",time:"Время",abc:"Учёба и имена",phr:"Фразы",gram:"Формы глаголов",misc:"Разное"};
+
+/* ---------- normalization ---------- */
+const normHy = s => s.toLowerCase().replace(/եւ/g,"և").replace(/[՛՞՜]/g,"").replace(/[։՝,.!?:;«»"'()\-–—]/g," ").replace(/\s+/g," ").trim();
+const normRu = s => s.toLowerCase().replace(/ё/g,"е").replace(/[.,!?:;«»"'()\-–—]/g," ").replace(/\s+/g," ").trim();
+function ruForms(v){ // "(…)" is an optional note
+  const out = new Set([normRu(v.replace(/\([^)]*\)/g," ")), normRu(v)]);
+  out.delete(""); return [...out];
+}
+
+/* ---------- data ---------- */
+function parseRaw(){
+  const map = new Map(); let i = 0;
+  for(const line of RAW.trim().split("\n")){
+    const [hy,ru,cat] = line.split("|"); if(!hy||!ru) continue;
+    addWord({hy:hy.split(";").map(s=>s.trim()), ru:ru.split(";").map(s=>s.trim()), cat:cat||"misc", order:i++, custom:false}, map);
+  }
+  return map;
+}
+function addWord(w, map){
+  w.id = normHy(w.hy[0]);
+  const ex = map.get(w.id);
+  if(ex){ for(const r of w.ru) if(!ex.ru.includes(r)) ex.ru.push(r); return ex; }
+  map.set(w.id, w); return w;
+}
+let WORDS = new Map();
+let RU_INDEX = new Map(); // ru form -> Set(word ids)
+function rebuild(){
+  WORDS = parseRaw();
+  let i = 100000;
+  for(const c of S.custom) addWord({hy:c.hy, ru:c.ru, cat:c.cat||"misc", order:i++, custom:true}, WORDS);
+  RU_INDEX = new Map();
+  for(const w of WORDS.values()) for(const r of w.ru) for(const f of ruForms(r)){
+    if(!RU_INDEX.has(f)) RU_INDEX.set(f,new Set()); RU_INDEX.get(f).add(w.id);
+  }
+}
+const list = () => [...WORDS.values()].sort((a,b)=>a.order-b.order);
+
+/* ---------- state ---------- */
+const KEY = "barer.v1";
+const DEF = {p:{}, custom:[], set:{goal:50,gap:20,retype:false,translit:true,kbd:true}, day:"", today:0, mode:"new", dir:"both", cat:"all", ts:0};
+let S = load();
+function load(){
+  let s = null;
+  try{ s = JSON.parse(localStorage.getItem(KEY)); }catch(e){}
+  s = Object.assign(structuredClone(DEF), s||{});
+  s.set = Object.assign(structuredClone(DEF.set), s.set||{});
+  return s;
+}
+let saveT = null;
+function save(){
+  S.ts = Date.now();
+  try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){}
+  clearTimeout(saveT); saveT = setTimeout(cloudSave, 2500);
+}
+const P = id => S.p[id] || (S.p[id] = {a:0,b:0,r:0,e:0,t:0});
+const goal = () => Math.max(1, +S.set.goal||50);
+const dirs = () => S.dir==="both" ? ["a","b"] : [S.dir];
+const isDone = w => { const p=S.p[w.id]||{a:0,b:0}; return p.a>=goal() && p.b>=goal(); };
+function todayKey(){ const d=new Date(); return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate(); }
+
+/* ---------- transliteration hint ---------- */
+const TR = {"ա":"а","բ":"б","գ":"г","դ":"д","ե":"е","զ":"з","է":"э","ը":"ы","թ":"т'","ժ":"ж","ի":"и","լ":"л","խ":"х","ծ":"ц","կ":"к","հ":"h","ձ":"дз","ղ":"ғ","ճ":"ч","մ":"м","յ":"й","ն":"н","շ":"ш","ո":"о","չ":"ч'","պ":"п","ջ":"дж","ռ":"р","ս":"с","վ":"в","տ":"т","ր":"р","ց":"ц'","փ":"п'","ք":"к'","և":"ев","օ":"о","ֆ":"ф"};
+function translit(s){
+  s = s.toLowerCase().replace(/[՛՞՜]/g,""); let o = "";
+  for(let i=0;i<s.length;i++){
+    const c=s[i], prev=s[i-1], start=!prev||/[\s,.!?՛՞]/.test(prev);
+    if(c==="ո"&&s[i+1]==="ւ"){o+="у";i++;continue}
+    if(c==="ե"&&start){o+="е";continue}
+    if(c==="ո"&&start){o+="во";continue}
+    if(c==="յ"&&start&&i===0){o+="й";continue}
+    o += TR[c] ?? c;
+  }
+  return o;
+}
+
+/* ---------- scheduler ---------- */
+function filtered(){ return list().filter(w => S.cat==="all" || w.cat===S.cat); }
+function candidates(){
+  const g = goal(), ds = dirs(); let ws = filtered(), out = [];
+  if(S.mode==="new"){
+    for(const w of ws) for(const d of ds){ const p=S.p[w.id]||{}; const c=p[d]||0; if(c<g) out.push({w,d,wt:1+(p.r||0)}); }
+  } else if(S.mode==="all"){
+    for(const w of ws) for(const d of ds){ const p=S.p[w.id]||{}; out.push({w,d,wt:1/(1+(p[d]||0)/g*3)+(p.r||0)}); }
+  } else {
+    for(const w of ws){ const p=S.p[w.id]; if(p&&p.r>0) for(const d of ds) out.push({w,d,wt:p.r}); }
+  }
+  return out;
+}
+let cur = null, lastId = null, phase = "ask", lastWrong = false, recent = [];
+function pick(){
+  let c = candidates();
+  if(c.length===0) return null;
+  const distinct = new Set(c.map(x=>x.w.id));
+  // не повторять слово, пока не прошло N других (или меньше, если слов мало)
+  const gap = Math.min(Math.max(0,+S.set.gap||0), distinct.size-1);
+  const block = new Set(recent.slice(-gap));
+  if(gap>0) c = c.filter(x=>!block.has(x.w.id));
+  const tot = c.reduce((s,x)=>s+x.wt,0); let r = Math.random()*tot;
+  for(const x of c){ r -= x.wt; if(r<=0) return x; }
+  return c[c.length-1];
+}
+
+/* ---------- checking ---------- */
+function correctFor(item, ans){
+  const {w,d} = item;
+  if(d==="a"){
+    const a = normRu(ans); if(!a) return false;
+    return w.ru.some(r => ruForms(r).includes(a));
+  } else {
+    const a = normHy(ans); if(!a) return false;
+    const ids = new Set([w.id]);
+    for(const r of w.ru) for(const f of ruForms(r)) (RU_INDEX.get(f)||[]).forEach(id=>ids.add(id));
+    for(const id of ids){ const x=WORDS.get(id); if(x && x.hy.some(h=>normHy(h)===a)) return true; }
+    return false;
+  }
+}
+
+/* ---------- UI: practice ---------- */
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+let kbdOn = S.set.kbd;
+function answerIsHy(){ return cur && cur.d==="b"; }
+
+function next(){
+  phase = "ask"; lastWrong = false;
+  cur = pick();
+  $("fb").innerHTML = "";
+  const ans = $("ans"); ans.value = ""; ans.disabled = false;
+  $("checkBtn").textContent = "Проверить"; $("checkBtn").disabled = false;
+  if(!cur){ showEmpty(); return; }
+  $("card").hidden = false; $("emptyLearn").hidden = true;
+  lastId = cur.w.id; recent.push(lastId); if(recent.length>200) recent=recent.slice(-100);
+  const {w,d} = cur, p = S.p[w.id]||{}, c = p[d]||0, g = goal();
+  $("dirLabel").textContent = d==="a" ? "С армянского" : "С русского";
+  $("cntLabel").innerHTML = `<b>${c}</b> / ${g}` + (c>=g ? " ✓" : "");
+  $("cntBar").style.width = Math.min(100, c/g*100) + "%";
+  const pr = $("prompt");
+  pr.className = "w " + (d==="a"?"hy":"ru");
+  pr.textContent = (d==="a" ? w.hy : w.ru).join(" / ");
+  $("translit").textContent = d==="a" && S.set.translit ? w.hy.map(translit).join(" / ") : "";
+  $("translit").hidden = !$("translit").textContent;
+  $("catTag").textContent = CATS[w.cat] || w.cat;
+  ans.placeholder = d==="a" ? "Перевод на русском" : "Перевод на армянском";
+  ans.className = "input" + (d==="b" ? " hy" : "");
+  ans.lang = d==="b" ? "hy" : "ru";
+  syncKbd();
+  if(!(d==="b" && kbdOn)) setTimeout(()=>ans.focus({preventScroll:true}), 30);
+}
+function showEmpty(){
+  $("card").hidden = true; $("kbd").hidden = true;
+  const e = $("emptyLearn"); e.hidden = false;
+  if(S.mode==="new") e.innerHTML = `<b>Շնորհավորում եմ!</b>Все слова ${S.cat==="all"?"":"этой темы "}выучены на ${goal()} ответов. Переключитесь на «Все слова», чтобы повторять, или добавьте новые.`;
+  else if(S.mode==="err") e.innerHTML = `<b>Ошибок нет</b>Здесь появятся слова, в которых вы недавно ошиблись.`;
+  else e.innerHTML = `<b>Пусто</b>В этой теме пока нет слов.`;
+}
+function syncKbd(){
+  const hy = answerIsHy();
+  $("kbdToggle").hidden = !hy;
+  $("kbdToggle").textContent = kbdOn ? "Клавиатура телефона" : "Армянская клавиатура";
+  $("kbd").hidden = !(hy && kbdOn) || !cur;
+  $("ans").inputMode = hy && kbdOn ? "none" : "text";
+}
+function haptic(type){ try{ TG?.HapticFeedback?.notificationOccurred(type); }catch(e){} }
+
+function submit(){
+  if(!cur) return;
+  const ans = $("ans"), v = ans.value;
+  if(phase==="ask"){
+    if(!v.trim()){ ans.focus(); return; }
+    grade(correctFor(cur, v), v);
+  } else if(phase==="retype"){
+    if(correctFor(cur, v)) { next(); }
+    else { ans.classList.remove("shake"); void ans.offsetWidth; ans.classList.add("shake"); haptic("error"); }
+  } else next();
+}
+function grade(ok, given){
+  const {w,d} = cur, p = P(w.id), g = goal();
+  bumpToday();
+  if(ok){
+    p[d]++; p.r = Math.max(0,(p.r||0)-1); p.t = Date.now();
+    save(); haptic("success");
+    $("cntLabel").innerHTML = `<b>${p[d]}</b> / ${g}` + (p[d]>=g?" ✓":"");
+    $("cntBar").style.width = Math.min(100,p[d]/g*100)+"%";
+    const extra = d==="a" ? w.ru : w.hy;
+    const msg = (p.a>=g&&p.b>=g&&p[d]===g) ? "Слово выучено в обе стороны" : (p[d]===g ? `Готово: ${g} из ${g} в эту сторону` : "Верно");
+    $("fb").innerHTML = `<div class="fb ok pop"><span>${esc(msg)}</span>${extra.length>1?`<span>Все варианты: ${esc(extra.join(" / "))}</span>`:""}</div>`;
+    phase = "wait"; $("ans").disabled = true; $("checkBtn").disabled = true;
+    setTimeout(()=>{ if(phase==="wait") next(); }, extra.length>1 ? 1300 : 650);
+  } else {
+    p.e = (p.e||0)+1; p.r = Math.min(6,(p.r||0)+2); p.t = Date.now();
+    save(); haptic("error");
+    const right = (d==="a" ? w.ru : w.hy).join(" / ");
+    $("fb").innerHTML = `<div class="fb bad shake">${given?`<span class="yours">${esc(given)}</span>`:"<span>Правильно:</span>"}<span class="right ${d==="b"?"hy":""}">${esc(right)}</span>${d==="b"&&S.set.translit?`<span>${esc(w.hy.map(translit).join(" / "))}</span>`:""}</div>`;
+    if(S.set.retype){
+      phase = "retype"; $("ans").value = ""; $("ans").placeholder = "Перепишите правильный ответ";
+      $("checkBtn").textContent = "Дальше";
+      if(!(d==="b"&&kbdOn)) $("ans").focus({preventScroll:true});
+    } else {
+      phase = "next"; $("checkBtn").textContent = "Дальше"; $("ans").disabled = true;
+      $("checkBtn").focus({preventScroll:true});
+    }
+  }
+  renderStats();
+}
+function bumpToday(){ const k=todayKey(); if(S.day!==k){S.day=k;S.today=0;} S.today++; }
+
+/* ---------- on-screen Armenian keyboard ---------- */
+const ROWS = ["է թ փ ձ ջ ր չ ճ ժ ծ","ք ո ե ռ տ ը ւ ի օ պ","ա ս դ ֆ գ հ յ կ լ խ","զ ղ ց վ բ ն մ շ և"];
+function buildKbd(el, getInput, onGo){
+  el.innerHTML = ROWS.map(r=>`<div class="kr">${r.split(" ").map(k=>`<button type="button" data-k="${k}">${k}</button>`).join("")}</div>`).join("")
+    + `<div class="kr"><button type="button" class="wide" data-k="⌫" aria-label="Стереть">⌫</button><button type="button" class="space" data-k=" ">пробел</button><button type="button" class="wide go" data-k="⏎">${onGo?"Готово":"Ввод"}</button></div>`;
+  el.addEventListener("pointerdown", e=>{ if(e.target.closest("button")) e.preventDefault(); });
+  el.addEventListener("click", e=>{
+    const b = e.target.closest("button"); if(!b) return;
+    const inp = getInput(); if(inp.disabled && b.dataset.k!=="⏎") return;
+    const k = b.dataset.k;
+    if(k==="⏎"){ onGo ? onGo() : null; return; }
+    const st = inp.selectionStart ?? inp.value.length, en = inp.selectionEnd ?? inp.value.length;
+    if(k==="⌫"){
+      if(st===en && st>0) inp.value = inp.value.slice(0,st-1)+inp.value.slice(en), inp.setSelectionRange?.(st-1,st-1);
+      else inp.value = inp.value.slice(0,st)+inp.value.slice(en), inp.setSelectionRange?.(st,st);
+    } else { inp.value = inp.value.slice(0,st)+k+inp.value.slice(en); inp.setSelectionRange?.(st+k.length,st+k.length); }
+    try{ TG?.HapticFeedback?.selectionChanged(); }catch(e){}
+  });
+}
+
+/* ---------- words list ---------- */
+let openId = null;
+function renderList(){
+  const q = $("search").value.trim(), qh = normHy(q), qr = normRu(q), cat = $("catSel2").value, g = goal();
+  const ws = list().filter(w => (cat==="all"||w.cat===cat) && (!q || w.hy.some(h=>normHy(h).includes(qh)) || w.ru.some(r=>normRu(r).includes(qr))));
+  $("listCount").textContent = ws.length + " " + plural(ws.length,["слово","слова","слов"]);
+  $("list").innerHTML = ws.map(w=>{
+    const p = S.p[w.id]||{a:0,b:0,e:0};
+    const open = openId===w.id;
+    return `<div class="item ${isDone(w)?"done":""}" data-id="${esc(w.id)}">
+      <div class="h">${esc(w.hy.join(" / "))}</div>
+      <div class="m"><div class="mini"><span>${p.a}</span><div class="bar"><i style="width:${Math.min(100,p.a/g*100)}%"></i></div></div><div class="mini"><span>${p.b}</span><div class="bar"><i style="width:${Math.min(100,p.b/g*100)}%"></i></div></div></div>
+      <div class="r">${esc(w.ru.join(" / "))}${p.e?` · ошибок ${p.e}`:""}</div>
+      ${open?`<div class="acts"><button class="btn ghost small" data-act="reset">Обнулить прогресс</button>${w.custom?`<button class="btn ghost small" data-act="del">Удалить слово</button>`:""}<span class="note" style="align-self:center">${esc(CATS[w.cat]||w.cat)}</span></div>`:""}
+    </div>`;
+  }).join("") || `<div class="item"><div class="r">Ничего не найдено</div></div>`;
+}
+function plural(n,f){const a=n%10,b=n%100;return f[a===1&&b!==11?0:a>=2&&a<=4&&(b<10||b>=20)?1:2]}
+
+/* ---------- stats ---------- */
+function renderStats(){
+  const ws = list();
+  $("stLearned").textContent = ws.filter(isDone).length;
+  $("stTotal").textContent = ws.length;
+  $("stToday").textContent = S.day===todayKey() ? S.today : 0;
+}
+
+/* ---------- tabs ---------- */
+function tab(name){
+  for(const v of ["learn","words","add","set"]) $("v-"+v).hidden = v!==name;
+  document.querySelectorAll("nav.tabs button").forEach(b=>b.setAttribute("aria-current", b.dataset.tab===name?"page":"false"));
+  if(name==="words") renderList();
+  if(name==="learn" && (!cur || phase!=="ask")) next();
+  if(name==="set") fillSettings();
+  window.scrollTo(0,0);
+}
+
+function toast(t){ const el=$("toast"); el.textContent=t; el.hidden=false; clearTimeout(toast.t); toast.t=setTimeout(()=>el.hidden=true,2200); }
+
+function fillCats(){
+  const counts = {}; for(const w of WORDS.values()) counts[w.cat]=(counts[w.cat]||0)+1;
+  const opts = `<option value="all">Все темы · ${WORDS.size}</option>` + Object.entries(CATS).filter(([k])=>counts[k]).map(([k,v])=>`<option value="${k}">${v} · ${counts[k]}</option>`).join("");
+  $("catSel").innerHTML = opts; $("catSel2").innerHTML = opts;
+  $("catSel").value = counts[S.cat]||S.cat==="all" ? S.cat : "all";
+  $("addCat").innerHTML = Object.entries(CATS).map(([k,v])=>`<option value="${k}">${v}</option>`).join("");
+  $("addCat").value = "misc";
+}
+function setSeg(id, val){ document.querySelectorAll(`#${id} button`).forEach(b=>b.setAttribute("aria-pressed", b.dataset.v===val)); }
+function fillSettings(){
+  $("sGoal").value = S.set.goal; $("sGap").value = S.set.gap;
+  $("sTranslit").checked = S.set.translit; $("sRetype").checked = S.set.retype; $("sKbd").checked = S.set.kbd;
+  $("verNote").textContent = `База слов: версия ${BASE_VERSION}, ${WORDS.size} записей.` + (TG ? " Работает внутри Telegram." : "");
+}
+
+/* ---------- Telegram ---------- */
+let TG = null;
+function initTelegram(){
+  const inTg = /tgWebApp/.test(location.hash+location.search) || window.TelegramWebviewProxy || window.external?.notify && /Telegram/i.test(navigator.userAgent);
+  if(!inTg) return;
+  const s = document.createElement("script");
+  s.src = "https://telegram.org/js/telegram-web-app.js";
+  s.onload = ()=>{
+    const tg = window.Telegram?.WebApp; if(!tg) return;
+    TG = tg; tg.ready(); tg.expand();
+    try{ tg.disableVerticalSwipes?.(); }catch(e){}
+    const apply = ()=>{ document.documentElement.dataset.theme = tg.colorScheme==="dark"?"dark":"light"; try{tg.setHeaderColor?.(getComputedStyle(document.body).backgroundColor); tg.setBackgroundColor?.(getComputedStyle(document.body).backgroundColor);}catch(e){} };
+    apply(); tg.onEvent("themeChanged", apply);
+    cloudLoad();
+  };
+  document.head.appendChild(s);
+}
+function cloudSave(){
+  const cs = TG?.CloudStorage; if(!cs || !TG.isVersionAtLeast?.("6.9")) return;
+  const str = JSON.stringify({p:S.p, custom:S.custom, set:S.set, ts:S.ts});
+  const n = Math.ceil(str.length/3800);
+  for(let i=0;i<n;i++) cs.setItem("d"+i, str.slice(i*3800,(i+1)*3800));
+  cs.setItem("dn", String(n));
+}
+function cloudLoad(){
+  const cs = TG?.CloudStorage; if(!cs || !TG.isVersionAtLeast?.("6.9")) return;
+  cs.getItem("dn", (err, n)=>{
+    n = +n; if(err || !n) { cloudSave(); return; }
+    const keys = Array.from({length:n},(_,i)=>"d"+i);
+    cs.getItems(keys, (e2, vals)=>{
+      if(e2 || !vals) return;
+      try{
+        const r = JSON.parse(keys.map(k=>vals[k]||"").join(""));
+        mergeIn(r);
+        if((r.ts||0) > (S.ts||0) && r.set) S.set = Object.assign(S.set, r.set);
+        save(); rebuild(); fillCats(); renderStats(); if(!$("v-learn").hidden) next();
+      }catch(x){}
+    });
+  });
+}
+function mergeIn(r){
+  for(const [id,q] of Object.entries(r.p||{})){
+    const p = P(id);
+    p.a = Math.max(p.a||0,q.a||0); p.b = Math.max(p.b||0,q.b||0); p.e = Math.max(p.e||0,q.e||0);
+    if((q.t||0)>(p.t||0)){ p.r=q.r||0; p.t=q.t; }
+  }
+  const have = new Set(S.custom.map(c=>normHy(c.hy[0])));
+  for(const c of (r.custom||[])) if(!have.has(normHy(c.hy[0]))) S.custom.push(c);
+}
+
+/* ---------- wiring ---------- */
+function init(){
+  rebuild(); fillCats();
+  setSeg("modeSeg", S.mode); setSeg("dirSeg", S.dir);
+  buildKbd($("kbd"), ()=>$("ans"), submit);
+  buildKbd($("kbd2"), ()=>$("addHy"), null);
+  $("ansForm").addEventListener("submit", e=>{ e.preventDefault(); submit(); });
+  $("dunno").addEventListener("click", ()=>{ if(cur && phase==="ask") grade(false, ""); });
+  $("kbdToggle").addEventListener("click", ()=>{ kbdOn=!kbdOn; syncKbd(); if(!kbdOn) $("ans").focus(); else $("ans").blur(); });
+  $("kbd2Toggle").addEventListener("click", ()=>{ const k=$("kbd2"); k.hidden=!k.hidden; $("addHy").inputMode = k.hidden?"text":"none"; $("kbd2Toggle").textContent = k.hidden?"Армянская клавиатура":"Клавиатура телефона"; });
+  $("modeSeg").addEventListener("click", e=>{ const b=e.target.closest("button"); if(!b) return; S.mode=b.dataset.v; setSeg("modeSeg",S.mode); save(); next(); });
+  $("dirSeg").addEventListener("click", e=>{ const b=e.target.closest("button"); if(!b) return; S.dir=b.dataset.v; setSeg("dirSeg",S.dir); save(); next(); });
+  $("catSel").addEventListener("change", e=>{ S.cat=e.target.value; save(); next(); });
+  document.querySelectorAll("nav.tabs button").forEach(b=>b.addEventListener("click", ()=>tab(b.dataset.tab)));
+  $("search").addEventListener("input", renderList);
+  $("catSel2").addEventListener("change", renderList);
+  $("list").addEventListener("click", e=>{
+    const act = e.target.closest("[data-act]"), it = e.target.closest(".item"); if(!it||!it.dataset.id) return;
+    const id = it.dataset.id;
+    if(act?.dataset.act==="reset"){ delete S.p[id]; save(); toast("Прогресс слова обнулён"); renderStats(); }
+    else if(act?.dataset.act==="del"){ S.custom = S.custom.filter(c=>normHy(c.hy[0])!==id); delete S.p[id]; save(); rebuild(); fillCats(); renderStats(); toast("Слово удалено"); }
+    else openId = openId===id ? null : id;
+    renderList();
+  });
+  $("addForm").addEventListener("submit", e=>{
+    e.preventDefault();
+    const hy = $("addHy").value.split(";").map(s=>s.trim()).filter(Boolean), ru = $("addRu").value.split(";").map(s=>s.trim()).filter(Boolean);
+    if(!hy.length||!ru.length) return;
+    if(!/[Ա-֏]/.test(hy[0])){ toast("В армянском поле нужны армянские буквы"); return; }
+    const id = normHy(hy[0]);
+    if(WORDS.has(id) && !WORDS.get(id).custom){ toast("Это слово уже есть в базе"); return; }
+    S.custom = S.custom.filter(c=>normHy(c.hy[0])!==id);
+    S.custom.push({hy, ru, cat:$("addCat").value});
+    save(); rebuild(); fillCats(); renderStats();
+    $("addHy").value=""; $("addRu").value="";
+    toast("Слово добавлено: " + hy[0]);
+  });
+  const num = (id,k,min,max)=>$(id).addEventListener("change", e=>{ let v=Math.round(+e.target.value); if(isNaN(v)||(v===0&&k==="goal")) v=DEF.set[k]; v=Math.min(max,Math.max(min,v)); S.set[k]=v; e.target.value=v; save(); renderStats(); cur=null; });
+  num("sGoal","goal",1,500); num("sGap","gap",0,200);
+  for(const [id,k] of [["sTranslit","translit"],["sRetype","retype"],["sKbd","kbd"]]) $(id).addEventListener("change", e=>{ S.set[k]=e.target.checked; if(k==="kbd") kbdOn=e.target.checked; save(); cur=null; });
+  $("bkExport").addEventListener("click", ()=>{
+    const t = JSON.stringify({p:S.p,custom:S.custom,set:S.set}); const ta=$("backup"); ta.value=t;
+    navigator.clipboard?.writeText(t).then(()=>toast("Скопировано"), ()=>{ ta.select(); toast("Выделено, скопируйте вручную"); }) ?? (ta.select(), toast("Выделено, скопируйте вручную"));
+  });
+  $("bkImport").addEventListener("click", ()=>{
+    try{ const r = JSON.parse($("backup").value); mergeIn(r); save(); rebuild(); fillCats(); renderStats(); toast("Прогресс загружен"); }
+    catch(e){ toast("Не получилось прочитать копию: вставьте текст целиком"); }
+  });
+  $("resetBtn").addEventListener("click", ()=>{ $("resetConfirm").hidden=false; });
+  $("resetYes").addEventListener("click", ()=>{ S.p={}; S.today=0; save(); $("resetConfirm").hidden=true; renderStats(); cur=null; toast("Прогресс сброшен"); });
+  renderStats(); next();
+  initTelegram();
+}
+init();
+</script>
+
+</body>
+</html>
