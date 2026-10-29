@@ -14,17 +14,17 @@
 /* Layout: one narrow column; sticky stats header, practice card centered, fixed bottom tab bar. Palette: Yerevan tuff rose-grey + pomegranate. */
 :root{
   --bg:#F1ECEE; --surface:#FFFFFF; --surface-2:#E9E1E5; --ink:#251A20; --muted:#7B6B74; --line:#DDD3D8;
-  --accent:#A3224A; --accent-ink:#FFFFFF; --apricot:#D27B25; --ok:#257552; --ok-bg:#E2F1E8; --bad:#B9352A; --bad-bg:#FAE5E2;
+  --accent:#A3224A; --accent-ink:#FFFFFF; --apricot:#D27B25; --ok:#257552; --ok-bg:#E2F1E8; --bad:#B9352A; --bad-bg:#FAE5E2; --tray:#D3D5DA; --key:#FFFFFF; --key-mod:#AEB3BC; --key-shadow:#898A8D;
   --f-ui:"Golos Text","Noto Sans Armenian",system-ui,-apple-system,"Segoe UI",sans-serif;
   --f-hy:"Noto Serif Armenian","Noto Sans Armenian",Georgia,serif;
   --f-hys:"Noto Sans Armenian","Golos Text",system-ui,sans-serif;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --bg:#16111A; --surface:#211A25; --surface-2:#2C2431; --ink:#F2EAF0; --muted:#A797A2; --line:#3A3040;
-  --accent:#EE5C83; --accent-ink:#1B0F15; --apricot:#F0A35A; --ok:#5BC394; --ok-bg:#183126; --bad:#F27D6F; --bad-bg:#3B1E1D; color-scheme:dark}}
+  --accent:#EE5C83; --accent-ink:#1B0F15; --apricot:#F0A35A; --ok:#5BC394; --ok-bg:#183126; --bad:#F27D6F; --bad-bg:#3B1E1D; --tray:#2A2A2D; --key:#6B6B6E; --key-mod:#464649; --key-shadow:#121214; color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#16111A; --surface:#211A25; --surface-2:#2C2431; --ink:#F2EAF0; --muted:#A797A2; --line:#3A3040;
-  --accent:#EE5C83; --accent-ink:#1B0F15; --apricot:#F0A35A; --ok:#5BC394; --ok-bg:#183126; --bad:#F27D6F; --bad-bg:#3B1E1D; color-scheme:dark}
+  --accent:#EE5C83; --accent-ink:#1B0F15; --apricot:#F0A35A; --ok:#5BC394; --ok-bg:#183126; --bad:#F27D6F; --bad-bg:#3B1E1D; --tray:#2A2A2D; --key:#6B6B6E; --key-mod:#464649; --key-shadow:#121214; color-scheme:dark}
 html,body{height:100%}
 body{background:var(--bg);color:var(--ink);font-family:var(--f-ui);font-size:15px;-webkit-tap-highlight-color:transparent}
 *{box-sizing:border-box}
@@ -80,13 +80,17 @@ form.answer .input{flex:1;min-width:0;font-size:18px;padding:12px 14px}
 .pop{animation:pop .35s}
 @keyframes pop{50%{transform:scale(1.02)}}
 @media (prefers-reduced-motion:reduce){.shake,.pop{animation:none}.bar i{transition:none}}
-.kbd{margin-top:12px;display:grid;gap:6px;user-select:none;-webkit-user-select:none}
-.kbd .kr{display:flex;gap:4px;justify-content:center}
-.kbd button{flex:1 1 0;min-width:0;max-width:46px;height:44px;border:0;border-radius:8px;background:var(--surface);border-bottom:2px solid var(--line);font-family:var(--f-hys);font-size:18px;padding:0;touch-action:manipulation}
-.kbd button:active{background:var(--surface-2)}
-.kbd button.wide{max-width:none;flex:2 1 0;font-family:var(--f-ui);font-size:14px}
-.kbd button.space{flex:5 1 0;max-width:none}
-.kbd button.go{background:var(--accent);color:var(--accent-ink);border-bottom-color:transparent}
+.kbd{margin-top:12px;display:grid;gap:9px;padding:9px 3px 8px;background:var(--tray);border-radius:14px;user-select:none;-webkit-user-select:none;touch-action:manipulation}
+.kbd .kr{display:flex;gap:5px;justify-content:center}
+.kbd .kr.r2{padding-inline:4%}
+.kbd button{flex:1 1 0;min-width:0;height:44px;border:0;border-radius:6px;background:var(--key);color:var(--ink);box-shadow:0 1px 0 var(--key-shadow);font-family:var(--f-hys);font-size:19px;padding:0;touch-action:manipulation;line-height:1}
+.kbd button:active{background:var(--key-mod)}
+.kbd button.mod{background:var(--key-mod);font-family:var(--f-ui);font-size:17px;flex:1.25 1 0}
+.kbd button.mod.on{background:var(--key);}
+.kbd .rb button{flex:1 1 0}
+.kbd button.space{flex:3 1 0;font-family:var(--f-ui);font-size:15px;color:var(--muted)}
+.kbd button.go{background:var(--accent);color:var(--accent-ink);font-size:15px;font-weight:600}
+@media (max-width:380px){.kbd{gap:8px}.kbd .kr{gap:4px}.kbd button{height:42px;font-size:17px}}
 .empty{text-align:center;padding:36px 16px;color:var(--muted);line-height:1.5}
 .empty b{display:block;color:var(--ink);font-size:18px;margin-bottom:6px;font-family:var(--f-hy)}
 /* words list */
@@ -817,22 +821,42 @@ function grade(ok, given){
 function bumpToday(){ const k=todayKey(); if(S.day!==k){S.day=k;S.today=0;} S.today++; }
 
 /* ---------- on-screen Armenian keyboard ---------- */
-const ROWS = ["է թ փ ձ ջ ր չ ճ ժ ծ","ք ո ե ռ տ ը ւ ի օ պ","ա ս դ ֆ գ հ յ կ լ խ","զ ղ ց վ բ ն մ շ և"];
+// Раскладка как на iPhone (армянская, восточная)
+const ROWS = [
+  ["՛","…","ձ","յ","՞","—","և","(",")","օ","ռ","ժ"],
+  ["խ","վ","է","ր","դ","ե","ը","ի","ո","բ","չ","ջ"],
+  ["ա","ս","տ","ֆ","կ","հ","ճ","ք","լ","թ","փ"],
+  ["⇧","զ","ց","գ","ւ","պ","ն","մ","շ","ղ","ծ","⌫"]
+];
+const UP = c => c==="և" ? "Եվ" : c.toUpperCase();
 function buildKbd(el, getInput, onGo){
-  el.innerHTML = ROWS.map(r=>`<div class="kr">${r.split(" ").map(k=>`<button type="button" data-k="${k}">${k}</button>`).join("")}</div>`).join("")
-    + `<div class="kr"><button type="button" class="wide" data-k="⌫" aria-label="Стереть">⌫</button><button type="button" class="space" data-k=" ">пробел</button><button type="button" class="wide go" data-k="⏎">${onGo?"Готово":"Ввод"}</button></div>`;
+  let shift = false;
+  const keyHtml = k => k==="⇧" ? `<button type="button" class="mod" data-k="⇧" aria-label="Заглавная">⇧</button>`
+    : k==="⌫" ? `<button type="button" class="mod" data-k="⌫" aria-label="Стереть">⌫</button>`
+    : `<button type="button" data-k="${k}">${k}</button>`;
+  el.innerHTML = ROWS.map((r,i)=>`<div class="kr r${i}">${r.map(keyHtml).join("")}</div>`).join("")
+    + `<div class="kr rb"><button type="button" class="space" data-k=" ">пробел</button><button type="button" class="mod go" data-k="⏎">${onGo?"Готово":"Ввод"}</button></div>`;
+  const paint = ()=>{
+    el.querySelectorAll("button[data-k]").forEach(b=>{ const k=b.dataset.k; if(k.length===1 && /[\u0561-\u0587]/.test(k)) b.textContent = shift ? UP(k).slice(0,1) : k; });
+    el.querySelector('[data-k="⇧"]').classList.toggle("on", shift);
+  };
   el.addEventListener("pointerdown", e=>{ if(e.target.closest("button")) e.preventDefault(); });
   el.addEventListener("click", e=>{
     const b = e.target.closest("button"); if(!b) return;
-    const inp = getInput(); if(inp.disabled && b.dataset.k!=="⏎") return;
-    const k = b.dataset.k;
+    const inp = getInput(); const k = b.dataset.k;
+    if(k==="⇧"){ shift=!shift; paint(); return; }
+    if(inp.disabled && k!=="⏎") return;
     if(k==="⏎"){ onGo ? onGo() : null; return; }
     const st = inp.selectionStart ?? inp.value.length, en = inp.selectionEnd ?? inp.value.length;
     if(k==="⌫"){
-      if(st===en && st>0) inp.value = inp.value.slice(0,st-1)+inp.value.slice(en), inp.setSelectionRange?.(st-1,st-1);
-      else inp.value = inp.value.slice(0,st)+inp.value.slice(en), inp.setSelectionRange?.(st,st);
-    } else { inp.value = inp.value.slice(0,st)+k+inp.value.slice(en); inp.setSelectionRange?.(st+k.length,st+k.length); }
-    try{ TG?.HapticFeedback?.selectionChanged(); }catch(e){}
+      if(st===en && st>0){ inp.value = inp.value.slice(0,st-1)+inp.value.slice(en); inp.setSelectionRange?.(st-1,st-1); }
+      else { inp.value = inp.value.slice(0,st)+inp.value.slice(en); inp.setSelectionRange?.(st,st); }
+    } else {
+      const ch = shift && /[\u0561-\u0587]/.test(k) ? UP(k) : k;
+      inp.value = inp.value.slice(0,st)+ch+inp.value.slice(en); inp.setSelectionRange?.(st+ch.length,st+ch.length);
+      if(shift){ shift=false; paint(); }
+    }
+    try{ TG?.HapticFeedback?.impactOccurred("light"); }catch(e){}
   });
 }
 
