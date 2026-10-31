@@ -72,17 +72,45 @@ form.answer .input{flex:1;min-width:0;font-size:18px;padding:12px 14px}
 .pop{animation:pop .35s}
 @keyframes pop{50%{transform:scale(1.02)}}
 @media (prefers-reduced-motion:reduce){.shake,.pop{animation:none}.bar i{transition:none}}
-.kbd{margin-top:12px;display:grid;gap:9px;padding:9px 3px 8px;background:var(--tray);border-radius:14px;user-select:none;-webkit-user-select:none;touch-action:manipulation}
+.kbd{display:grid;gap:9px;background:var(--tray);user-select:none;-webkit-user-select:none;touch-action:manipulation}
+.dock{position:fixed;left:0;right:0;bottom:0;z-index:8;padding:8px max(3px,env(safe-area-inset-left,0px)) calc(8px + env(safe-area-inset-bottom,0px)) max(3px,env(safe-area-inset-right,0px));box-shadow:0 -1px 0 var(--line)}
+.dock .kr{width:100%;max-width:620px;margin-inline:auto}
+body.dock-on nav.tabs{visibility:hidden}
+body.dock-on .app{padding-bottom:calc(var(--dockh,300px) + 24px)}
+body.dock-on .prompt{min-height:92px;padding-block:10px 6px}
 .kbd .kr{display:flex;gap:5px;justify-content:center}
-.kbd .kr.r2{padding-inline:4%}
-.kbd button{flex:1 1 0;min-width:0;height:44px;border:0;border-radius:6px;background:var(--key);color:var(--ink);box-shadow:0 1px 0 var(--key-shadow);font-family:var(--f-hys);font-size:19px;padding:0;touch-action:manipulation;line-height:1}
+.kbd.hy .kr.r2{padding-inline:4%}
+.kbd .kr.r1.ru{padding-inline:0}
+.kbd button{flex:1 1 0;min-width:0;height:45px;border:0;border-radius:6px;background:var(--key);color:var(--ink);box-shadow:0 1px 0 var(--key-shadow);font-family:var(--f-hys);font-size:19px;padding:0;touch-action:manipulation;line-height:1}
 .kbd button:active{background:var(--key-mod)}
 .kbd button.mod{background:var(--key-mod);font-family:var(--f-ui);font-size:17px;flex:1.25 1 0}
 .kbd button.mod.on{background:var(--key);}
-.kbd .rb button{flex:1 1 0}
-.kbd button.space{flex:3 1 0;font-family:var(--f-ui);font-size:15px;color:var(--muted)}
+.kbd .rb button{flex:1.4 1 0}
+.kbd .rb button.ext{flex:1 1 0;background:var(--key);font-family:var(--f-ui)}
+.kbd button.space{flex:4 1 0;font-family:var(--f-ui);font-size:15px;color:var(--muted)}
 .kbd button.go{background:var(--accent);color:var(--accent-ink);font-size:15px;font-weight:600}
 @media (max-width:380px){.kbd{gap:8px}.kbd .kr{gap:4px}.kbd button{height:42px;font-size:17px}}
+@media (max-height:640px){.kbd{gap:7px}.kbd button{height:40px}}
+/* alphabet */
+.glyph{display:inline-block;line-height:1}
+.glyph.pr{font-family:var(--f-hys);font-size:var(--gs,72px);font-weight:400}
+.glyph.cur{height:var(--gh,112px);width:calc(var(--gh,112px) * var(--w) / var(--h));background:currentColor;-webkit-mask-size:100% 100%;mask-size:100% 100%;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat}
+.snd{font-size:clamp(34px,10vw,46px);font-weight:600;letter-spacing:.02em}
+.snd u,.translit u,.fb u{text-decoration-thickness:2px;text-underline-offset:4px}
+.forms{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.forms button{border:1.5px solid var(--line);background:var(--surface);border-radius:12px;padding:6px 4px;display:grid;justify-items:center;gap:2px;color:var(--muted);font-size:11.5px;min-width:0}
+.forms button .glyph.pr{--gs:22px;color:var(--ink)}
+.forms button .glyph.cur{--gh:30px;color:var(--ink)}
+.forms button[aria-pressed="true"]{border-color:var(--accent);color:var(--ink);background:var(--surface)}
+.forms button[aria-pressed="false"]{opacity:.55}
+details.abct{margin-top:14px;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:4px 14px}
+details.abct summary{cursor:pointer;padding:10px 0;font-weight:600;font-size:14.5px}
+.abcgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:1px;background:var(--line);border-radius:12px;overflow:hidden;margin-bottom:12px}
+.abcgrid div{background:var(--surface);padding:8px 6px;display:grid;justify-items:center;gap:2px;font-size:12px;color:var(--muted)}
+.abcgrid .pp{font-family:var(--f-hys);font-size:22px;color:var(--ink)}
+.abcgrid .cc{display:flex;gap:2px;color:var(--ink)}
+.abcgrid .cc .glyph.cur{--gh:40px}
+.abcgrid .s{color:var(--ink);font-size:13px}
 .empty{text-align:center;padding:36px 16px;color:var(--muted);line-height:1.5}
 .empty b{display:block;color:var(--ink);font-size:18px;margin-bottom:6px;font-family:var(--f-hy)}
 /* words list */
@@ -131,24 +159,25 @@ nav.tabs button[aria-current="page"]{color:var(--accent);font-weight:600}
         </div>
       </div>
       <select id="catSel" aria-label="Тема"></select>
+      <div class="forms" id="formsSel" role="group" aria-label="Какие формы букв учить" hidden></div>
     </div>
 
     <div class="card" id="card">
       <div class="card-top"><span class="dirlabel" id="dirLabel">С армянского</span><span class="count" id="cntLabel"></span></div>
       <div class="bar"><i id="cntBar" style="width:0"></i></div>
       <div class="prompt"><div class="w hy" id="prompt">…</div><div class="translit" id="translit"></div><span class="cat" id="catTag"></span></div>
+      <div id="fb"></div>
       <form class="answer" id="ansForm" autocomplete="off">
         <input class="input" id="ans" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="done" placeholder="Перевод">
         <button class="btn" id="checkBtn" type="submit">Проверить</button>
       </form>
-      <div id="fb"></div>
-      <div class="subactions">
+      <div class="subactions" id="subact">
         <button class="link" type="button" id="dunno">Не знаю</button>
-        <button class="link" type="button" id="kbdToggle">Армянская клавиатура</button>
+        <button class="link" type="button" id="kbdToggle">Клавиатура телефона</button>
       </div>
     </div>
-    <div class="kbd" id="kbd" hidden></div>
     <div class="empty" id="emptyLearn" hidden></div>
+    <details class="abct" id="abcTable" hidden><summary>Таблица алфавита</summary><div class="abcgrid" id="abcGrid"></div></details>
   </section>
 
   <!-- WORDS -->
@@ -166,8 +195,6 @@ nav.tabs button[aria-current="page"]{color:var(--accent);font-weight:600}
     <form class="panel" id="addForm" autocomplete="off">
       <h2>Новое слово</h2>
       <label class="f">По-армянски <input class="input hy" id="addHy" required placeholder="например: խնձոր" autocomplete="off" spellcheck="false"></label>
-      <div class="kbd" id="kbd2" hidden></div>
-      <button class="link" type="button" id="kbd2Toggle" style="justify-self:start">Армянская клавиатура</button>
       <label class="f">По-русски <input class="input" id="addRu" required placeholder="яблоко" autocomplete="off"></label>
       <p>Несколько вариантов перевода пишите через точку с запятой: «берег; ладонь».</p>
       <label class="f">Тема <select id="addCat"></select></label>
@@ -187,7 +214,7 @@ nav.tabs button[aria-current="page"]{color:var(--accent);font-weight:600}
       <label class="f">Через сколько других слов можно повторить слово <input class="input" id="sGap" type="number" min="0" max="200" inputmode="numeric"></label>
       <div class="sw"><span>Подсказка-транслит под армянским словом</span><input type="checkbox" id="sTranslit"></div>
       <div class="sw"><span>После ошибки переписать правильный ответ</span><input type="checkbox" id="sRetype"></div>
-      <div class="sw"><span>Армянская клавиатура на экране по умолчанию</span><input type="checkbox" id="sKbd"></div>
+      <div class="sw"><span>Экранная клавиатура (армянская и русская) вместо клавиатуры телефона</span><input type="checkbox" id="sKbd"></div>
     </div>
     <div class="panel">
       <h2>Резервная копия</h2>
@@ -206,20 +233,37 @@ nav.tabs button[aria-current="page"]{color:var(--accent);font-weight:600}
 
 <nav class="tabs"><div class="in">
   <button data-tab="learn" aria-current="page"><svg viewBox="0 0 24 24"><path d="M4 5h11a3 3 0 0 1 3 3v11H7a3 3 0 0 1-3-3z"/><path d="M8 10h6M8 14h4"/></svg>Учить</button>
+  <button data-tab="abc"><svg viewBox="0 0 24 24"><text x="12" y="18.5" text-anchor="middle" font-size="17" font-family="Noto Sans Armenian, sans-serif" fill="currentColor" stroke="none">Աա</text></svg>Алфавит</button>
   <button data-tab="words"><svg viewBox="0 0 24 24"><path d="M5 6h14M5 12h14M5 18h9"/></svg>Слова</button>
   <button data-tab="add"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 8v8M8 12h8"/></svg>Добавить</button>
   <button data-tab="set"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg>Настройки</button>
 </div></nav>
+<div class="kbd dock" id="dock" hidden></div>
 <div class="toast" id="toast" hidden></div>
 
 <script>
 const BASE_VERSION = "__VERSION__";
 const RAW = `__WORDS__`;
+const CUR = __CURSIVE__; // прописные буквы из учебника: [[заглавная],[строчная]] = [base64, w, h]
 const CATS = {food:"Растения и еда",ani:"Животные",nat:"Природа и погода",ppl:"Люди и семья",body:"Тело",adj:"Признаки и цвета",verb:"Глаголы",place:"Дом и город",time:"Время",abc:"Учёба и имена",phr:"Фразы",gram:"Формы глаголов",misc:"Разное"};
+
+/* ---------- alphabet (по таблице учебника; "_" = в учебнике подчёркнуто) ---------- */
+const ABC = [
+ ["Ա","ա","а",["а"]],["Բ","բ","б",["б"]],["Գ","գ","г",["г"]],["Դ","դ","д",["д"]],["Ե","ե","е",["е","йе","ye"]],
+ ["Զ","զ","з",["з"]],["Է","է","э",["э"]],["Ը","ը","ыэ",["ыэ","ы"]],["Թ","թ","_тh",["тh","тх","th"]],["Ժ","ժ","ж",["ж"]],
+ ["Ի","ի","и",["и"]],["Լ","լ","л",["л"]],["Խ","խ","х",["х"]],["Ծ","ծ","_тз",["тз"]],["Կ","կ","к",["к"]],
+ ["Հ","հ","_h",["h","һ"]],["Ձ","ձ","_дз",["дз"]],["Ղ","ղ","_ʁ",["ʁ","гх","gh"]],["Ճ","ճ","_тж",["тж"]],["Մ","մ","м",["м"]],
+ ["Յ","յ","й",["й"]],["Ն","ն","н",["н"]],["Շ","շ","ш",["ш"]],["Ո","ո","во",["во"]],["Չ","չ","ч",["ч","чх"]],
+ ["Պ","պ","п",["п"]],["Ջ","ջ","_дж",["дж"]],["Ռ","ռ","р",["р","рр"]],["Ս","ս","с",["с"]],["Վ","վ","в",["в"]],
+ ["Տ","տ","т",["т"]],["Ր","ր","рь",["рь"]],["Ց","ց","ц",["ц","цх"]],["Ու","ու","у",["у"]],["Փ","փ","_пh",["пh","пх","ph"]],
+ ["Ք","ք","_кh",["кh","кх","kh"]],["ԵՎ","և","ев",["ев","йев"]],["Օ","օ","о",["о"]],["Ֆ","ֆ","ф",["ф"]]
+];
+const FORMS = {pu:"печатная заглавная", pl:"печатная строчная", cu:"прописная заглавная", cl:"прописная строчная"};
+const FORM_KEYS = ["pu","pl","cu","cl"];
 
 /* ---------- normalization ---------- */
 const normHy = s => s.toLowerCase().replace(/եւ/g,"և").replace(/[՛՞՜]/g,"").replace(/[։՝,.!?:;«»"'()\-–—]/g," ").replace(/\s+/g," ").trim();
-const normRu = s => s.toLowerCase().replace(/ё/g,"е").replace(/[.,!?:;«»"'()\-–—]/g," ").replace(/\s+/g," ").trim();
+const normRu = s => s.toLowerCase().replace(/ё/g,"е").replace(/[.,!?:;«»"'()\-–—\[\]]/g," ").replace(/\s+/g," ").trim();
 function ruForms(v){ // "(…)" is an optional note
   const out = new Set([normRu(v.replace(/\([^)]*\)/g," ")), normRu(v)]);
   out.delete(""); return [...out];
@@ -252,16 +296,21 @@ function rebuild(){
   }
 }
 const list = () => [...WORDS.values()].sort((a,b)=>a.order-b.order);
+const ABC_ITEMS = {};
+for(let i=0;i<ABC.length;i++) for(const f of FORM_KEYS){ const id=`abc:${i}:${f}`; ABC_ITEMS[id] = {id, i, f, kind:"abc"}; }
+const abcList = () => Object.values(ABC_ITEMS).filter(x => S.ab.forms.includes(x.f));
 
 /* ---------- state ---------- */
 const KEY = "barer.v1";
-const DEF = {p:{}, custom:[], set:{goal:50,gap:20,retype:false,translit:true,kbd:true}, day:"", today:0, mode:"new", dir:"both", cat:"all", ts:0};
+const DEF = {p:{}, custom:[], set:{goal:50,gap:20,retype:false,translit:true,kbd:true}, day:"", today:0, mode:"new", dir:"both", cat:"all", ab:{mode:"new",dir:"both",forms:["pu","pl","cu","cl"]}, ts:0};
 let S = load();
 function load(){
   let s = null;
   try{ s = JSON.parse(localStorage.getItem(KEY)); }catch(e){}
   s = Object.assign(structuredClone(DEF), s||{});
   s.set = Object.assign(structuredClone(DEF.set), s.set||{});
+  s.ab = Object.assign(structuredClone(DEF.ab), s.ab||{});
+  if(!Array.isArray(s.ab.forms) || !s.ab.forms.length) s.ab.forms = [...FORM_KEYS];
   return s;
 }
 let saveT = null;
@@ -270,57 +319,77 @@ function save(){
   try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){}
   clearTimeout(saveT); saveT = setTimeout(cloudSave, 2500);
 }
+let DECK = "w"; // "w" — слова, "a" — алфавит
+const ST = () => DECK==="w" ? S : S.ab;
 const P = id => S.p[id] || (S.p[id] = {a:0,b:0,r:0,e:0,t:0});
 const goal = () => Math.max(1, +S.set.goal||50);
-const dirs = () => S.dir==="both" ? ["a","b"] : [S.dir];
+const dirs = () => ST().dir==="both" ? ["a","b"] : [ST().dir];
 const isDone = w => { const p=S.p[w.id]||{a:0,b:0}; return p.a>=goal() && p.b>=goal(); };
 function todayKey(){ const d=new Date(); return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate(); }
 
-/* ---------- transliteration hint ---------- */
-const TR = {"ա":"а","բ":"б","գ":"г","դ":"д","ե":"е","զ":"з","է":"э","ը":"ы","թ":"т'","ժ":"ж","ի":"и","լ":"л","խ":"х","ծ":"ц","կ":"к","հ":"h","ձ":"дз","ղ":"ғ","ճ":"ч","մ":"м","յ":"й","ն":"н","շ":"ш","ո":"о","չ":"ч'","պ":"п","ջ":"дж","ռ":"р","ս":"с","վ":"в","տ":"т","ր":"р","ց":"ц'","փ":"п'","ք":"к'","և":"ев","օ":"о","ֆ":"ф"};
-function translit(s){
+/* ---------- transliteration hint (по таблице учебника) ---------- */
+const TR = {"ա":"а","բ":"б","գ":"г","դ":"д","ե":"е","զ":"з","է":"э","ը":"ыэ","թ":"_тh","ժ":"ж","ի":"и","լ":"л","խ":"х","ծ":"_тз","կ":"к","հ":"_h","ձ":"_дз","ղ":"_ʁ","ճ":"_тж","մ":"м","յ":"й","ն":"н","շ":"ш","ո":"о","չ":"ч","պ":"п","ջ":"_дж","ռ":"р","ս":"с","վ":"в","տ":"т","ր":"р","ց":"ц","փ":"_пh","ք":"_кh","և":"ев","օ":"о","ֆ":"ф"};
+const esc = s => String(s).replace(/[&<>"]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const sndPart = t => t.startsWith("_") ? `<u>${esc(t.slice(1))}</u>` : esc(t);
+function translit(s){ // returns HTML
   s = s.toLowerCase().replace(/[՛՞՜]/g,""); let o = "";
   for(let i=0;i<s.length;i++){
-    const c=s[i], prev=s[i-1], start=!prev||/[\s,.!?՛՞]/.test(prev);
+    const c=s[i], prev=s[i-1], start=!prev||/[\s,.!?]/.test(prev);
     if(c==="ո"&&s[i+1]==="ւ"){o+="у";i++;continue}
     if(c==="ե"&&start){o+="е";continue}
     if(c==="ո"&&start){o+="во";continue}
-    if(c==="յ"&&start&&i===0){o+="й";continue}
-    o += TR[c] ?? c;
+    o += TR[c] ? sndPart(TR[c]) : esc(c);
   }
   return o;
+}
+const sndHTML = i => "[" + sndPart(ABC[i][2]) + "]";
+function glyphHTML(i, f){
+  const L = ABC[i], up = f[1]==="u";
+  if(f[0]==="p") return `<span class="glyph pr">${up?L[0]:L[1]}</span>`;
+  const [b,w,h] = CUR[i][up?0:1], u = `url(data:image/png;base64,${b})`;
+  return `<span class="glyph cur" role="img" aria-label="прописная буква" style="--w:${w};--h:${h};-webkit-mask-image:${u};mask-image:${u}"></span>`;
 }
 
 /* ---------- scheduler ---------- */
 function filtered(){ return list().filter(w => S.cat==="all" || w.cat===S.cat); }
+function deckItems(){ return DECK==="w" ? filtered() : abcList(); }
 function candidates(){
-  const g = goal(), ds = dirs(); let ws = filtered(), out = [];
-  if(S.mode==="new"){
+  const g = goal(), ds = dirs(), mode = ST().mode; let ws = deckItems(), out = [];
+  if(mode==="new"){
     for(const w of ws) for(const d of ds){ const p=S.p[w.id]||{}; const c=p[d]||0; if(c<g) out.push({w,d,wt:1+(p.r||0)}); }
-  } else if(S.mode==="all"){
+  } else if(mode==="all"){
     for(const w of ws) for(const d of ds){ const p=S.p[w.id]||{}; out.push({w,d,wt:1/(1+(p[d]||0)/g*3)+(p.r||0)}); }
   } else {
     for(const w of ws){ const p=S.p[w.id]; if(p&&p.r>0) for(const d of ds) out.push({w,d,wt:p.r}); }
   }
   return out;
 }
-let cur = null, lastId = null, phase = "ask", lastWrong = false, recent = [];
+let cur = null, phase = "ask", recent = {w:[],a:[]};
 function pick(){
   let c = candidates();
   if(c.length===0) return null;
-  const distinct = new Set(c.map(x=>x.w.id));
-  // не повторять слово, пока не прошло N других (или меньше, если слов мало)
+  const key = x => DECK==="a" ? x.w.i : x.w.id; // в алфавите не повторять ту же букву в другой форме подряд
+  const distinct = new Set(c.map(key));
   const gap = Math.min(Math.max(0,+S.set.gap||0), distinct.size-1);
-  const block = new Set(recent.slice(-gap));
-  if(gap>0) c = c.filter(x=>!block.has(x.w.id));
+  const block = new Set(recent[DECK].slice(-gap));
+  if(gap>0) c = c.filter(x=>!block.has(key(x)));
   const tot = c.reduce((s,x)=>s+x.wt,0); let r = Math.random()*tot;
   for(const x of c){ r -= x.wt; if(r<=0) return x; }
   return c[c.length-1];
 }
 
 /* ---------- checking ---------- */
+function abcTargets(i, up){
+  const L = ABC[i];
+  if(up) return L[0]==="Ու" ? ["Ու","ՈՒ"] : L[0]==="ԵՎ" ? ["ԵՎ","Եվ"] : [L[0]];
+  return L[1]==="և" ? ["և","եվ","եւ"] : [L[1]];
+}
 function correctFor(item, ans){
   const {w,d} = item;
+  if(w.kind==="abc"){
+    if(d==="a"){ const a = normRu(ans); return !!a && ABC[w.i][3].some(x=>normRu(x)===a); }
+    return abcTargets(w.i, w.f[1]==="u").includes(ans.replace(/\s+/g,""));
+  }
   if(d==="a"){
     const a = normRu(ans); if(!a) return false;
     return w.ru.some(r => ruForms(r).includes(a));
@@ -332,64 +401,106 @@ function correctFor(item, ans){
     return false;
   }
 }
+const ansLang = it => it.d==="b" ? "hy" : "ru";
 
 /* ---------- UI: practice ---------- */
 const $ = id => document.getElementById(id);
-const esc = s => String(s).replace(/[&<>"]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 let kbdOn = S.set.kbd;
-function answerIsHy(){ return cur && cur.d==="b"; }
 
+function renderPrompt(){
+  const {w,d} = cur, pr = $("prompt"), tl = $("translit");
+  if(w.kind==="abc"){
+    const cursive = w.f[0]==="c", up = w.f[1]==="u";
+    if(d==="a"){
+      $("dirLabel").textContent = "Буква → звук";
+      pr.className = "w"; pr.innerHTML = glyphHTML(w.i, w.f);
+      $("catTag").textContent = FORMS[w.f];
+      $("ans").placeholder = "Звук по-русски, например: тз";
+    } else if(!cursive){
+      $("dirLabel").textContent = "Звук → буква";
+      pr.className = "w"; pr.innerHTML = `<span class="snd">${sndHTML(w.i)}</span>`;
+      $("catTag").textContent = "напишите: " + FORMS[w.f];
+      $("ans").placeholder = up ? "Заглавная буква (⇧)" : "Строчная буква";
+    } else {
+      $("dirLabel").textContent = "Пропись → печатная";
+      pr.className = "w"; pr.innerHTML = glyphHTML(w.i, w.f);
+      $("catTag").textContent = up ? "напишите печатной заглавной" : "напишите печатной строчной";
+      $("ans").placeholder = up ? "Печатная заглавная (⇧)" : "Печатная строчная";
+    }
+    tl.innerHTML = ""; tl.hidden = true;
+    return;
+  }
+  $("dirLabel").textContent = d==="a" ? "С армянского" : "С русского";
+  pr.className = "w " + (d==="a"?"hy":"ru");
+  pr.textContent = (d==="a" ? w.hy : w.ru).join(" / ");
+  tl.innerHTML = d==="a" && S.set.translit ? w.hy.map(translit).join(" / ") : "";
+  tl.hidden = !tl.innerHTML;
+  $("catTag").textContent = CATS[w.cat] || w.cat;
+  $("ans").placeholder = d==="a" ? "Перевод на русском" : "Перевод на армянском";
+}
 function next(){
-  phase = "ask"; lastWrong = false;
+  phase = "ask";
   cur = pick();
   $("fb").innerHTML = "";
   const ans = $("ans"); ans.value = ""; ans.disabled = false;
   $("checkBtn").textContent = "Проверить"; $("checkBtn").disabled = false;
   if(!cur){ showEmpty(); return; }
   $("card").hidden = false; $("emptyLearn").hidden = true;
-  lastId = cur.w.id; recent.push(lastId); if(recent.length>200) recent=recent.slice(-100);
-  const {w,d} = cur, p = S.p[w.id]||{}, c = p[d]||0, g = goal();
-  $("dirLabel").textContent = d==="a" ? "С армянского" : "С русского";
+  const rk = DECK==="a" ? cur.w.i : cur.w.id;
+  recent[DECK].push(rk); if(recent[DECK].length>200) recent[DECK]=recent[DECK].slice(-100);
+  const p = S.p[cur.w.id]||{}, c = p[cur.d]||0, g = goal();
   $("cntLabel").innerHTML = `<b>${c}</b> / ${g}` + (c>=g ? " ✓" : "");
   $("cntBar").style.width = Math.min(100, c/g*100) + "%";
-  const pr = $("prompt");
-  pr.className = "w " + (d==="a"?"hy":"ru");
-  pr.textContent = (d==="a" ? w.hy : w.ru).join(" / ");
-  $("translit").textContent = d==="a" && S.set.translit ? w.hy.map(translit).join(" / ") : "";
-  $("translit").hidden = !$("translit").textContent;
-  $("catTag").textContent = CATS[w.cat] || w.cat;
-  ans.placeholder = d==="a" ? "Перевод на русском" : "Перевод на армянском";
-  ans.className = "input" + (d==="b" ? " hy" : "");
-  ans.lang = d==="b" ? "hy" : "ru";
+  renderPrompt();
+  ans.className = "input" + (ansLang(cur)==="hy" ? " hy" : "");
+  ans.lang = ansLang(cur);
   syncKbd();
-  if(!(d==="b" && kbdOn)) setTimeout(()=>ans.focus({preventScroll:true}), 30);
 }
 function showEmpty(){
-  $("card").hidden = true; $("kbd").hidden = true;
+  $("card").hidden = true; closeDock();
   const e = $("emptyLearn"); e.hidden = false;
-  if(S.mode==="new") e.innerHTML = `<b>Շնորհավորում եմ!</b>Все слова ${S.cat==="all"?"":"этой темы "}выучены на ${goal()} ответов. Переключитесь на «Все слова», чтобы повторять, или добавьте новые.`;
-  else if(S.mode==="err") e.innerHTML = `<b>Ошибок нет</b>Здесь появятся слова, в которых вы недавно ошиблись.`;
+  const mode = ST().mode;
+  if(DECK==="a"){
+    if(mode==="new") e.innerHTML = `<b>Շնորհավորում եմ!</b>Все выбранные формы букв выучены на ${goal()} ответов. Переключитесь на «Все буквы», чтобы повторять.`;
+    else if(mode==="err") e.innerHTML = `<b>Ошибок нет</b>Здесь появятся буквы, в которых вы недавно ошиблись.`;
+    else e.innerHTML = `<b>Пусто</b>Выберите хотя бы одну форму букв.`;
+    return;
+  }
+  if(mode==="new") e.innerHTML = `<b>Շնորհավորում եմ!</b>Все слова ${S.cat==="all"?"":"этой темы "}выучены на ${goal()} ответов. Переключитесь на «Все слова», чтобы повторять, или добавьте новые.`;
+  else if(mode==="err") e.innerHTML = `<b>Ошибок нет</b>Здесь появятся слова, в которых вы недавно ошиблись.`;
   else e.innerHTML = `<b>Пусто</b>В этой теме пока нет слов.`;
 }
+function practiceVisible(){ return !$("v-learn").hidden; }
 function syncKbd(){
-  const hy = answerIsHy();
-  $("kbdToggle").hidden = !hy;
-  $("kbdToggle").textContent = kbdOn ? "Клавиатура телефона" : "Армянская клавиатура";
-  $("kbd").hidden = !(hy && kbdOn) || !cur;
-  $("ans").inputMode = hy && kbdOn ? "none" : "text";
+  $("kbdToggle").textContent = kbdOn ? "Клавиатура телефона" : "Экранная клавиатура";
+  setInputModes();
+  if(!cur || !practiceVisible()) return;
+  if(kbdOn) openDock($("ans"), ansLang(cur), submit, DECK==="a" && cur.d==="a");
+  else { closeDock(); setTimeout(()=>$("ans").focus({preventScroll:true}), 30); }
 }
+function setInputModes(){ for(const id of ["ans","addHy","addRu"]) $(id).inputMode = kbdOn ? "none" : "text"; }
 function haptic(type){ try{ TG?.HapticFeedback?.notificationOccurred(type); }catch(e){} }
 
 function submit(){
   if(!cur) return;
   const ans = $("ans"), v = ans.value;
   if(phase==="ask"){
-    if(!v.trim()){ ans.focus(); return; }
+    if(!v.trim()){ if(!kbdOn) ans.focus(); return; }
     grade(correctFor(cur, v), v);
   } else if(phase==="retype"){
     if(correctFor(cur, v)) { next(); }
     else { ans.classList.remove("shake"); void ans.offsetWidth; ans.classList.add("shake"); haptic("error"); }
   } else next();
+}
+function rightHTML(){
+  const {w,d} = cur;
+  if(w.kind==="abc"){
+    const up = w.f[1]==="u", letter = up ? ABC[w.i][0] : ABC[w.i][1];
+    return d==="a" ? `<span class="right">${sndHTML(w.i)}</span><span>${esc(letter)} — ${esc(FORMS[w.f])}</span>`
+                   : `<span class="right hy">${esc(letter)}</span><span>${sndHTML(w.i)} · ${esc(FORMS[w.f])}</span>`;
+  }
+  const right = (d==="a" ? w.ru : w.hy).join(" / ");
+  return `<span class="right ${d==="b"?"hy":""}">${esc(right)}</span>${d==="b"&&S.set.translit?`<span>${w.hy.map(translit).join(" / ")}</span>`:""}`;
 }
 function grade(ok, given){
   const {w,d} = cur, p = P(w.id), g = goal();
@@ -399,67 +510,142 @@ function grade(ok, given){
     save(); haptic("success");
     $("cntLabel").innerHTML = `<b>${p[d]}</b> / ${g}` + (p[d]>=g?" ✓":"");
     $("cntBar").style.width = Math.min(100,p[d]/g*100)+"%";
-    const extra = d==="a" ? w.ru : w.hy;
-    const msg = (p.a>=g&&p.b>=g&&p[d]===g) ? "Слово выучено в обе стороны" : (p[d]===g ? `Готово: ${g} из ${g} в эту сторону` : "Верно");
+    const extra = w.kind==="abc" ? [] : (d==="a" ? w.ru : w.hy);
+    const msg = (p.a>=g&&p.b>=g&&p[d]===g) ? "Выучено в обе стороны" : (p[d]===g ? `Готово: ${g} из ${g} в эту сторону` : "Верно");
     $("fb").innerHTML = `<div class="fb ok pop"><span>${esc(msg)}</span>${extra.length>1?`<span>Все варианты: ${esc(extra.join(" / "))}</span>`:""}</div>`;
     phase = "wait"; $("ans").disabled = true; $("checkBtn").disabled = true;
     setTimeout(()=>{ if(phase==="wait") next(); }, extra.length>1 ? 1300 : 650);
   } else {
     p.e = (p.e||0)+1; p.r = Math.min(6,(p.r||0)+2); p.t = Date.now();
     save(); haptic("error");
-    const right = (d==="a" ? w.ru : w.hy).join(" / ");
-    $("fb").innerHTML = `<div class="fb bad shake">${given?`<span class="yours">${esc(given)}</span>`:"<span>Правильно:</span>"}<span class="right ${d==="b"?"hy":""}">${esc(right)}</span>${d==="b"&&S.set.translit?`<span>${esc(w.hy.map(translit).join(" / "))}</span>`:""}</div>`;
+    $("fb").innerHTML = `<div class="fb bad shake">${given?`<span class="yours">${esc(given)}</span>`:"<span>Правильно:</span>"}${rightHTML()}</div>`;
     if(S.set.retype){
       phase = "retype"; $("ans").value = ""; $("ans").placeholder = "Перепишите правильный ответ";
       $("checkBtn").textContent = "Дальше";
-      if(!(d==="b"&&kbdOn)) $("ans").focus({preventScroll:true});
+      if(!kbdOn) $("ans").focus({preventScroll:true});
     } else {
       phase = "next"; $("checkBtn").textContent = "Дальше"; $("ans").disabled = true;
-      $("checkBtn").focus({preventScroll:true});
+      if(!kbdOn) $("checkBtn").focus({preventScroll:true});
     }
+    if(!$("dock").hidden) requestAnimationFrame(()=>ensureVisible());
   }
   renderStats();
 }
 function bumpToday(){ const k=todayKey(); if(S.day!==k){S.day=k;S.today=0;} S.today++; }
 
-/* ---------- on-screen Armenian keyboard ---------- */
-// Раскладка как на iPhone (армянская, восточная)
-const ROWS = [
-  ["՛","…","ձ","յ","՞","—","և","(",")","օ","ռ","ժ"],
-  ["խ","վ","է","ր","դ","ե","ը","ի","ո","բ","չ","ջ"],
-  ["ա","ս","տ","ֆ","կ","հ","ճ","ք","լ","թ","փ"],
-  ["⇧","զ","ց","գ","ւ","պ","ն","մ","շ","ղ","ծ","⌫"]
-];
+/* ---------- on-screen keyboard (как на iPhone) ---------- */
+const LAYOUTS = {
+  hy: [
+    ["՛","…","ձ","յ","՞","—","և","(",")","օ","ռ","ժ"],
+    ["խ","վ","է","ր","դ","ե","ը","ի","ո","բ","չ","ջ"],
+    ["ա","ս","տ","ֆ","կ","հ","ճ","ք","լ","թ","փ"],
+    ["⇧","զ","ց","գ","ւ","պ","ն","մ","շ","ղ","ծ","⌫"]
+  ],
+  ru: [
+    ["й","ц","у","к","е","н","г","ш","щ","з","х"],
+    ["ф","ы","в","а","п","р","о","л","д","ж","э"],
+    ["⇧","я","ч","с","м","и","т","ь","б","ю","⌫"]
+  ]
+};
+const LONG = {"ь":"ъ","е":"ё"};
+const isLetter = k => k.length===1 && /[ա-ևа-яё]/.test(k);
 const UP = c => c==="և" ? "Եվ" : c.toUpperCase();
-function buildKbd(el, getInput, onGo){
-  let shift = false;
+let dock = null, dockLang = null, dockExtra = null, dockTarget = null, dockGo = null, shift = false;
+function renderDock(){
   const keyHtml = k => k==="⇧" ? `<button type="button" class="mod" data-k="⇧" aria-label="Заглавная">⇧</button>`
     : k==="⌫" ? `<button type="button" class="mod" data-k="⌫" aria-label="Стереть">⌫</button>`
     : `<button type="button" data-k="${k}">${k}</button>`;
-  el.innerHTML = ROWS.map((r,i)=>`<div class="kr r${i}">${r.map(keyHtml).join("")}</div>`).join("")
-    + `<div class="kr rb"><button type="button" class="space" data-k=" ">пробел</button><button type="button" class="mod go" data-k="⏎">${onGo?"Готово":"Ввод"}</button></div>`;
-  const paint = ()=>{
-    el.querySelectorAll("button[data-k]").forEach(b=>{ const k=b.dataset.k; if(k.length===1 && /[\u0561-\u0587]/.test(k)) b.textContent = shift ? UP(k).slice(0,1) : k; });
-    el.querySelector('[data-k="⇧"]').classList.toggle("on", shift);
-  };
-  el.addEventListener("pointerdown", e=>{ if(e.target.closest("button")) e.preventDefault(); });
-  el.addEventListener("click", e=>{
+  dock.className = "kbd dock " + dockLang;
+  dock.innerHTML = LAYOUTS[dockLang].map((r,i)=>`<div class="kr r${i} ${dockLang}">${r.map(keyHtml).join("")}</div>`).join("")
+    + `<div class="kr rb"><button type="button" class="mod" data-k="hide" aria-label="Скрыть клавиатуру">⌄</button>`
+    + (dockExtra ? `<button type="button" class="ext" data-k="h">h</button><button type="button" class="ext" data-k="ʁ">ʁ</button>` : "")
+    + `<button type="button" class="space" data-k=" ">${dockLang==="hy"?"բացատ":"пробел"}</button><button type="button" class="mod go" data-k="go">Готово</button></div>`;
+  shift = false;
+}
+function paintShift(){
+  dock.querySelectorAll("button[data-k]").forEach(b=>{ const k=b.dataset.k; if(isLetter(k)) b.textContent = shift ? UP(k).slice(0,1) : k; });
+  dock.querySelector('[data-k="⇧"]')?.classList.toggle("on", shift);
+}
+function openDock(input, lang, onGo, extra){
+  dockTarget = input; dockGo = onGo;
+  if(lang!==dockLang || !!extra!==dockExtra){ dockLang = lang; dockExtra = !!extra; renderDock(); }
+  const wasHidden = dock.hidden;
+  dock.hidden = false; document.body.classList.add("dock-on");
+  document.documentElement.style.setProperty("--dockh", dock.offsetHeight + "px");
+  if(document.activeElement!==input) input.focus({preventScroll:true});
+  requestAnimationFrame(()=>ensureVisible(wasHidden));
+}
+function closeDock(){
+  if(!dock || dock.hidden) return;
+  dock.hidden = true; document.body.classList.remove("dock-on");
+  if(dockTarget) dockTarget.blur();
+}
+// держать вопрос и поле ввода над клавиатурой
+function ensureVisible(){
+  if(dock.hidden || !dockTarget) return;
+  const limit = window.innerHeight - dock.offsetHeight - 10;
+  let top, bottom;
+  if(dockTarget.id==="ans"){
+    top = $("card").getBoundingClientRect().top - 8;
+    bottom = $("subact").getBoundingClientRect().bottom;
+  } else {
+    const r = dockTarget.closest("label")?.getBoundingClientRect() || dockTarget.getBoundingClientRect();
+    top = r.top - 60; bottom = r.bottom + 8;
+  }
+  let delta = top;                      // поднять карточку к верху
+  if(bottom - delta > limit) delta = bottom - limit; // но поле ввода обязательно над клавиатурой
+  if(Math.abs(delta) > 2) window.scrollBy({top: delta, behavior: "smooth"});
+}
+function initDock(){
+  dock = $("dock");
+  let lpTimer = null, lpFired = false;
+  dock.addEventListener("pointerdown", e=>{
     const b = e.target.closest("button"); if(!b) return;
-    const inp = getInput(); const k = b.dataset.k;
-    if(k==="⇧"){ shift=!shift; paint(); return; }
-    if(inp.disabled && k!=="⏎") return;
-    if(k==="⏎"){ onGo ? onGo() : null; return; }
-    const st = inp.selectionStart ?? inp.value.length, en = inp.selectionEnd ?? inp.value.length;
+    e.preventDefault();
+    lpFired = false; clearTimeout(lpTimer);
+    const k = b.dataset.k;
+    if(LONG[k]) lpTimer = setTimeout(()=>{ lpFired = true; typeChar(shift ? LONG[k].toUpperCase() : LONG[k]); }, 450);
+  });
+  const stop = ()=>clearTimeout(lpTimer);
+  dock.addEventListener("pointerup", stop); dock.addEventListener("pointercancel", stop); dock.addEventListener("pointerleave", stop);
+  dock.addEventListener("click", e=>{
+    const b = e.target.closest("button"); if(!b) return;
+    if(lpFired){ lpFired = false; return; }
+    const k = b.dataset.k, inp = dockTarget; if(!inp) return;
+    if(k==="⇧"){ shift=!shift; paintShift(); return; }
+    if(k==="hide"){ closeDock(); return; }
+    if(k==="go"){ dockGo ? dockGo() : closeDock(); return; }
+    if(inp.disabled) return;
     if(k==="⌫"){
+      const st = inp.selectionStart ?? inp.value.length, en = inp.selectionEnd ?? inp.value.length;
       if(st===en && st>0){ inp.value = inp.value.slice(0,st-1)+inp.value.slice(en); inp.setSelectionRange?.(st-1,st-1); }
       else { inp.value = inp.value.slice(0,st)+inp.value.slice(en); inp.setSelectionRange?.(st,st); }
-    } else {
-      const ch = shift && /[\u0561-\u0587]/.test(k) ? UP(k) : k;
-      inp.value = inp.value.slice(0,st)+ch+inp.value.slice(en); inp.setSelectionRange?.(st+ch.length,st+ch.length);
-      if(shift){ shift=false; paint(); }
-    }
+    } else typeChar(shift && isLetter(k) ? UP(k) : k);
     try{ TG?.HapticFeedback?.impactOccurred("light"); }catch(e){}
   });
+}
+function typeChar(ch){
+  const inp = dockTarget; if(!inp || inp.disabled) return;
+  const st = inp.selectionStart ?? inp.value.length, en = inp.selectionEnd ?? inp.value.length;
+  inp.value = inp.value.slice(0,st)+ch+inp.value.slice(en); inp.setSelectionRange?.(st+ch.length,st+ch.length);
+  if(shift){ shift=false; paintShift(); }
+}
+
+/* ---------- alphabet controls ---------- */
+function renderForms(){
+  const sample = 13; // Ծ
+  $("formsSel").innerHTML = FORM_KEYS.map(f=>`<button type="button" data-f="${f}" aria-pressed="${S.ab.forms.includes(f)}">${glyphHTML(sample,f)}<span>${f[0]==="p"?"печатная":"пропись"}</span></button>`).join("");
+}
+function renderAbcGrid(){
+  $("abcGrid").innerHTML = ABC.map((L,i)=>`<div><span>${i+1}</span><span class="pp">${L[0]}${L[1]}</span><span class="cc">${glyphHTML(i,"cu")}${glyphHTML(i,"cl")}</span><span class="s">${sndHTML(i)}</span></div>`).join("");
+}
+function applyDeckUI(){
+  const a = DECK==="a";
+  document.querySelector('#modeSeg [data-v="all"]').textContent = a ? "Все буквы" : "Все слова";
+  document.querySelector('#dirSeg [data-v="a"]').textContent = a ? "Буква → звук" : "Հայ → Рус";
+  document.querySelector('#dirSeg [data-v="b"]').textContent = a ? "Звук → буква" : "Рус → Հայ";
+  $("catSel").hidden = a; $("formsSel").hidden = !a; $("abcTable").hidden = !a;
+  setSeg("modeSeg", ST().mode); setSeg("dirSeg", ST().dir);
 }
 
 /* ---------- words list ---------- */
@@ -483,20 +669,28 @@ function plural(n,f){const a=n%10,b=n%100;return f[a===1&&b!==11?0:a>=2&&a<=4&&(
 
 /* ---------- stats ---------- */
 function renderStats(){
-  const ws = list();
+  const ws = DECK==="a" ? Object.values(ABC_ITEMS) : list();
   $("stLearned").textContent = ws.filter(isDone).length;
   $("stTotal").textContent = ws.length;
   $("stToday").textContent = S.day===todayKey() ? S.today : 0;
 }
 
 /* ---------- tabs ---------- */
+let curTab = "learn";
 function tab(name){
-  for(const v of ["learn","words","add","set"]) $("v-"+v).hidden = v!==name;
+  closeDock();
+  const practice = name==="learn" || name==="abc";
+  for(const v of ["learn","words","add","set"]) $("v-"+v).hidden = practice ? v!=="learn" : v!==name;
   document.querySelectorAll("nav.tabs button").forEach(b=>b.setAttribute("aria-current", b.dataset.tab===name?"page":"false"));
-  if(name==="words") renderList();
-  if(name==="learn" && (!cur || phase!=="ask")) next();
-  if(name==="set") fillSettings();
   window.scrollTo(0,0);
+  if(practice){
+    const deck = name==="abc" ? "a" : "w", changed = deck!==DECK;
+    DECK = deck; applyDeckUI(); renderStats();
+    if(changed || !cur || phase!=="ask") next(); else syncKbd();
+  }
+  if(name==="words") renderList();
+  if(name==="set") fillSettings();
+  curTab = name;
 }
 
 function toast(t){ const el=$("toast"); el.textContent=t; el.hidden=false; clearTimeout(toast.t); toast.t=setTimeout(()=>el.hidden=true,2200); }
@@ -513,7 +707,7 @@ function setSeg(id, val){ document.querySelectorAll(`#${id} button`).forEach(b=>
 function fillSettings(){
   $("sGoal").value = S.set.goal; $("sGap").value = S.set.gap;
   $("sTranslit").checked = S.set.translit; $("sRetype").checked = S.set.retype; $("sKbd").checked = S.set.kbd;
-  $("verNote").textContent = `База слов: версия ${BASE_VERSION}, ${WORDS.size} записей.` + (TG ? " Работает внутри Telegram." : "");
+  $("verNote").textContent = `База слов: версия ${BASE_VERSION}, ${WORDS.size} записей; алфавит: ${ABC.length} букв × 4 формы.` + (TG ? " Работает внутри Telegram." : "");
 }
 
 /* ---------- Telegram ---------- */
@@ -529,13 +723,14 @@ function initTelegram(){
     try{ tg.disableVerticalSwipes?.(); }catch(e){}
     const apply = ()=>{ document.documentElement.dataset.theme = tg.colorScheme==="dark"?"dark":"light"; try{tg.setHeaderColor?.(getComputedStyle(document.body).backgroundColor); tg.setBackgroundColor?.(getComputedStyle(document.body).backgroundColor);}catch(e){} };
     apply(); tg.onEvent("themeChanged", apply);
+    tg.onEvent("viewportChanged", ()=>{ if(dock && !dock.hidden) ensureVisible(); });
     cloudLoad();
   };
   document.head.appendChild(s);
 }
 function cloudSave(){
   const cs = TG?.CloudStorage; if(!cs || !TG.isVersionAtLeast?.("6.9")) return;
-  const str = JSON.stringify({p:S.p, custom:S.custom, set:S.set, ts:S.ts});
+  const str = JSON.stringify({p:S.p, custom:S.custom, set:S.set, ab:S.ab, ts:S.ts});
   const n = Math.ceil(str.length/3800);
   for(let i=0;i<n;i++) cs.setItem("d"+i, str.slice(i*3800,(i+1)*3800));
   cs.setItem("dn", String(n));
@@ -550,8 +745,8 @@ function cloudLoad(){
       try{
         const r = JSON.parse(keys.map(k=>vals[k]||"").join(""));
         mergeIn(r);
-        if((r.ts||0) > (S.ts||0) && r.set) S.set = Object.assign(S.set, r.set);
-        save(); rebuild(); fillCats(); renderStats(); if(!$("v-learn").hidden) next();
+        if((r.ts||0) > (S.ts||0)){ if(r.set) S.set = Object.assign(S.set, r.set); if(r.ab) S.ab = Object.assign(S.ab, r.ab); }
+        save(); rebuild(); fillCats(); renderForms(); applyDeckUI(); renderStats(); if(practiceVisible()) next();
       }catch(x){}
     });
   });
@@ -568,17 +763,22 @@ function mergeIn(r){
 
 /* ---------- wiring ---------- */
 function init(){
-  rebuild(); fillCats();
-  setSeg("modeSeg", S.mode); setSeg("dirSeg", S.dir);
-  buildKbd($("kbd"), ()=>$("ans"), submit);
-  buildKbd($("kbd2"), ()=>$("addHy"), null);
+  rebuild(); fillCats(); initDock(); renderForms(); renderAbcGrid(); applyDeckUI();
   $("ansForm").addEventListener("submit", e=>{ e.preventDefault(); submit(); });
+  $("ans").addEventListener("pointerdown", ()=>{ if(kbdOn && cur && $("dock").hidden) openDock($("ans"), ansLang(cur), submit, DECK==="a" && cur.d==="a"); });
+  $("addHy").addEventListener("focus", ()=>{ if(kbdOn) openDock($("addHy"), "hy", ()=>$("addRu").focus()); });
+  $("addRu").addEventListener("focus", ()=>{ if(kbdOn) openDock($("addRu"), "ru", ()=>closeDock()); });
   $("dunno").addEventListener("click", ()=>{ if(cur && phase==="ask") grade(false, ""); });
-  $("kbdToggle").addEventListener("click", ()=>{ kbdOn=!kbdOn; syncKbd(); if(!kbdOn) $("ans").focus(); else $("ans").blur(); });
-  $("kbd2Toggle").addEventListener("click", ()=>{ const k=$("kbd2"); k.hidden=!k.hidden; $("addHy").inputMode = k.hidden?"text":"none"; $("kbd2Toggle").textContent = k.hidden?"Армянская клавиатура":"Клавиатура телефона"; });
-  $("modeSeg").addEventListener("click", e=>{ const b=e.target.closest("button"); if(!b) return; S.mode=b.dataset.v; setSeg("modeSeg",S.mode); save(); next(); });
-  $("dirSeg").addEventListener("click", e=>{ const b=e.target.closest("button"); if(!b) return; S.dir=b.dataset.v; setSeg("dirSeg",S.dir); save(); next(); });
+  $("kbdToggle").addEventListener("click", ()=>{ kbdOn=!kbdOn; syncKbd(); });
+  $("modeSeg").addEventListener("click", e=>{ const b=e.target.closest("button"); if(!b) return; ST().mode=b.dataset.v; setSeg("modeSeg",ST().mode); save(); next(); });
+  $("dirSeg").addEventListener("click", e=>{ const b=e.target.closest("button"); if(!b) return; ST().dir=b.dataset.v; setSeg("dirSeg",ST().dir); save(); next(); });
   $("catSel").addEventListener("change", e=>{ S.cat=e.target.value; save(); next(); });
+  $("formsSel").addEventListener("click", e=>{
+    const b=e.target.closest("button"); if(!b) return; const f=b.dataset.f;
+    if(S.ab.forms.includes(f)){ if(S.ab.forms.length===1){ toast("Нужна хотя бы одна форма"); return; } S.ab.forms = S.ab.forms.filter(x=>x!==f); }
+    else S.ab.forms = FORM_KEYS.filter(x=>x===f || S.ab.forms.includes(x));
+    save(); renderForms(); next();
+  });
   document.querySelectorAll("nav.tabs button").forEach(b=>b.addEventListener("click", ()=>tab(b.dataset.tab)));
   $("search").addEventListener("input", renderList);
   $("catSel2").addEventListener("change", renderList);
@@ -599,15 +799,15 @@ function init(){
     if(WORDS.has(id) && !WORDS.get(id).custom){ toast("Это слово уже есть в базе"); return; }
     S.custom = S.custom.filter(c=>normHy(c.hy[0])!==id);
     S.custom.push({hy, ru, cat:$("addCat").value});
-    save(); rebuild(); fillCats(); renderStats();
+    save(); rebuild(); fillCats(); renderStats(); closeDock();
     $("addHy").value=""; $("addRu").value="";
     toast("Слово добавлено: " + hy[0]);
   });
   const num = (id,k,min,max)=>$(id).addEventListener("change", e=>{ let v=Math.round(+e.target.value); if(isNaN(v)||(v===0&&k==="goal")) v=DEF.set[k]; v=Math.min(max,Math.max(min,v)); S.set[k]=v; e.target.value=v; save(); renderStats(); cur=null; });
   num("sGoal","goal",1,500); num("sGap","gap",0,200);
-  for(const [id,k] of [["sTranslit","translit"],["sRetype","retype"],["sKbd","kbd"]]) $(id).addEventListener("change", e=>{ S.set[k]=e.target.checked; if(k==="kbd") kbdOn=e.target.checked; save(); cur=null; });
+  for(const [id,k] of [["sTranslit","translit"],["sRetype","retype"],["sKbd","kbd"]]) $(id).addEventListener("change", e=>{ S.set[k]=e.target.checked; if(k==="kbd"){ kbdOn=e.target.checked; setInputModes(); } save(); cur=null; });
   $("bkExport").addEventListener("click", ()=>{
-    const t = JSON.stringify({p:S.p,custom:S.custom,set:S.set}); const ta=$("backup"); ta.value=t;
+    const t = JSON.stringify({p:S.p,custom:S.custom,set:S.set,ab:S.ab}); const ta=$("backup"); ta.value=t;
     navigator.clipboard?.writeText(t).then(()=>toast("Скопировано"), ()=>{ ta.select(); toast("Выделено, скопируйте вручную"); }) ?? (ta.select(), toast("Выделено, скопируйте вручную"));
   });
   $("bkImport").addEventListener("click", ()=>{
@@ -616,7 +816,8 @@ function init(){
   });
   $("resetBtn").addEventListener("click", ()=>{ $("resetConfirm").hidden=false; });
   $("resetYes").addEventListener("click", ()=>{ S.p={}; S.today=0; save(); $("resetConfirm").hidden=true; renderStats(); cur=null; toast("Прогресс сброшен"); });
-  renderStats(); next();
+  window.addEventListener("resize", ()=>{ if(dock && !dock.hidden){ document.documentElement.style.setProperty("--dockh", dock.offsetHeight + "px"); } });
+  setInputModes(); renderStats(); next();
   initTelegram();
 }
 init();
