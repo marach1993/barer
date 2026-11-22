@@ -1,4 +1,4 @@
 # file|text|voice
-test-anahit|Բարև Ձեզ, ո՞նց եք|hy-AM-AnahitNeural
-test-hayk|Բարև Ձեզ, ո՞նց եք|hy-AM-HaykNeural
-test-en|Hello there|en-US-AriaNeural
+test-mms1|Բարև Ձեզ, ո՞նց եք|mms
+test-mms2|Ես արդուկ եմ անելու|mms
+test-mms3|ժամանակ|mms

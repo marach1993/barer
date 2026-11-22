@@ -12,8 +12,9 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: { python-version: '3.12' }
-      - run: pip install -U edge-tts
-      - run: python tts/gen.py
+      - run: pip install -U edge-tts transformers scipy && pip install torch --index-url https://download.pytorch.org/whl/cpu
+      - run: python tts/gen.py || true
+      - run: python tts/gen_mms.py
       - run: |
           git config user.name "tts-bot"
           git config user.email "tts-bot@users.noreply.github.com"

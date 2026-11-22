@@ -9,6 +9,7 @@ async def main():
         line = line.strip()
         if not line or line.startswith('#'): continue
         f, text, voice = line.split('|')
+        if voice == 'mms': continue
         out = f'audio/{f}.mp3'
         if os.path.exists(out) and os.path.getsize(out) > 0: continue
         ok = False
