@@ -1,3 +1,4 @@
 # file|text|voice
 test-anahit|Բարև Ձեզ, ո՞նց եք|hy-AM-AnahitNeural
 test-hayk|Բարև Ձեզ, ո՞նց եք|hy-AM-HaykNeural
+test-en|Hello there|en-US-AriaNeural
