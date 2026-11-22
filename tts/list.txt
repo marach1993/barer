@@ -1,4 +1,41 @@
-# file|text|voice
-test-mms1|Բարև Ձեզ, ո՞նց եք|mms
-test-mms2|Ես արդուկ եմ անելու|mms
-test-mms3|ժամանակ|mms
+# file|text|voice|id   (id "sample:N" = проба голосов; иначе id слова в приложении)
+f029cb4ca8f0|թև|anahit|sample:0
+77ab74197917|թև|hayk|sample:0
+af13d599ce35|փիղ|anahit|sample:1
+60ab7ba8989d|փիղ|hayk|sample:1
+1176741cb547|ուղտ|anahit|sample:2
+00862d9d4e7d|ուղտ|hayk|sample:2
+887b895b6615|խաղող|anahit|sample:3
+e30b48abdafa|խաղող|hayk|sample:3
+c62100974c2b|դուռ|anahit|sample:4
+11536184a1f2|դուռ|hayk|sample:4
+09c1973b3cea|դուր գալ|anahit|sample:5
+853895cc0128|դուր գալ|hayk|sample:5
+8763cf706924|ձմեռ|anahit|sample:6
+74263b0f81de|ձմեռ|hayk|sample:6
+260a9b486127|թիթեռ|anahit|sample:7
+2707b1ed388a|թիթեռ|hayk|sample:7
+2cb8e40ba2b8|ընկեր|anahit|sample:8
+a5c2a3a7b51b|ընկեր|hayk|sample:8
+62c8a515a9e6|ընկնել|anahit|sample:9
+f944a9ce80c8|ընկնել|hayk|sample:9
+0da4b8402950|քացախ|anahit|sample:10
+65f6eee0b541|քացախ|hayk|sample:10
+8f24887dc9a1|ճչալ|anahit|sample:11
+22898040f92c|ճչալ|hayk|sample:11
+a964db0ea24c|ջրարջ|anahit|sample:12
+d667da6113c8|ջրարջ|hayk|sample:12
+1bf1f180b837|չորեքշաբթի|anahit|sample:13
+620e43d16a8c|չորեքշաբթի|hayk|sample:13
+0373c2f5823b|օդերևութաբան|anahit|sample:14
+a5a4661a7727|օդերևութաբան|hayk|sample:14
+0f6c1b2a76b2|Եվրոպա|anahit|sample:15
+3d2e4a85626c|Եվրոպա|hayk|sample:15
+beb077dc4a6b|Այդ ի՞նչ ես անում|anahit|sample:16
+2c57d45c3fef|Այդ ի՞նչ ես անում|hayk|sample:16
+1a160071ab58|Ո՞նց ես|anahit|sample:17
+58923a0051ee|Ո՞նց ես|hayk|sample:17
+2e0317a842dc|մենք արդուկ չէինք անում|anahit|sample:18
+2bdb1d51cab6|մենք արդուկ չէինք անում|hayk|sample:18
+cd7828f04518|Ոչինչ, կամաց-կամաց, դու ասա|anahit|sample:19
+979138f31b2f|Ոչինչ, կամաց-կամաց, դու ասա|hayk|sample:19
