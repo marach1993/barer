@@ -1,0 +1,21 @@
+name: TTS
+on:
+  push:
+    paths: ['tts/list.txt']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  tts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - run: pip install -U edge-tts
+      - run: python tts/gen.py
+      - run: |
+          git config user.name "tts-bot"
+          git config user.email "tts-bot@users.noreply.github.com"
+          git add audio
+          git diff --cached --quiet || (git commit -m "Generate audio" && git push)
